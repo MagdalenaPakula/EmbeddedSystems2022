@@ -1,0 +1,24 @@
+PLAN FOR THE NEXT MEETING:
+-2148 zawisza - DZIALA
+-sd_modified - nie dziala - bledy w makefile
+- midterm_program_wav_2022 - to jest test program nie dziala
+- 2148_modified to jest na mid term - nie dziala muzyka ale wyswietla, wiatraczek dziala, reset dziala, to co zmienia muzyke nid ziala
+	Group:
+	- functionalities dodac
+	- dodac na gita
+	- sprobowac make w domu 
+	- functionalities dodac do worda
+	Madzia:
+	- wrzuce na gita testowy, a jak nie to 2148 zawisza
+	Malwina:
+	-
+	Paulina:
+	-
+	Tomek:
+	-
+
+- nowe zipy z teamsa:
+	- 2148_sd modified - bez kompilacji - poszlo bez debuga, dipslay dziala
+	- without timer - kompiluje sie - muza poszla, matrix dziala + odbicie lustrzane, wiatraczek, display sie pojawia cos? wsm to nic
+	- 2148_po_zajacieach - nie kumpiluje sie, wywala bledy - debuguje sie teoretycznie, wiatrak, display dziala, nic innego
+	- still no timer - wyrzuca bledy nie dziala
