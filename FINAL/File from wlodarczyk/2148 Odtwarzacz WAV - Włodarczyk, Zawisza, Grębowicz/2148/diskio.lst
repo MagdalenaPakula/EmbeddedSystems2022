@@ -1,0 +1,233 @@
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s 			page 1
+
+
+   1              		.code	16
+   2              		.file	"diskio.c"
+   3              		.text
+   4              		.align	2
+   5              		.global	disk_writep
+   6              		.code 16
+   7              		.thumb_func
+   8              		.type	disk_writep, %function
+   9              	disk_writep:
+  10 0000 0020     		mov	r0, #0
+  11              		@ lr needed for prologue
+  12              		@ sp needed for prologue
+  13 0002 7047     		bx	lr
+  14              		.size	disk_writep, .-disk_writep
+  15              		.align	2
+  16              		.global	disk_readp
+  17              		.code 16
+  18              		.thumb_func
+  19              		.type	disk_readp, %function
+  20              	disk_readp:
+  21 0004 F0B5     		push	{r4, r5, r6, r7, lr}
+  22 0006 1B04     		lsl	r3, r3, #16
+  23 0008 81B0     		sub	sp, sp, #4
+  24 000a 1204     		lsl	r2, r2, #16
+  25 000c 1B0C     		lsr	r3, r3, #16
+  26 000e 061C     		mov	r6, r0
+  27 0010 0820     		mov	r0, #8
+  28 0012 0C1C     		mov	r4, r1
+  29 0014 170C     		lsr	r7, r2, #16
+  30 0016 0093     		str	r3, [sp]
+  31 0018 FFF7FEFF 		bl	setSpiSpeed
+  32 001c 344B     		ldr	r3, .L22
+  33 001e 0022     		mov	r2, #0
+  34 0020 1A70     		strb	r2, [r3]
+  35 0022 344B     		ldr	r3, .L22+4
+  36 0024 3449     		ldr	r1, .L22+8
+  37 0026 1A70     		strb	r2, [r3]
+  38 0028 0123     		mov	r3, #1
+  39 002a 5B42     		neg	r3, r3
+  40 002c 0B80     		strh	r3, [r1]
+  41 002e 334B     		ldr	r3, .L22+12
+  42 0030 334D     		ldr	r5, .L22+16
+  43 0032 1A60     		str	r2, [r3]
+  44 0034 6102     		lsl	r1, r4, #9
+  45 0036 334B     		ldr	r3, .L22+20
+  46 0038 6406     		lsl	r4, r4, #25
+  47 003a 240C     		lsr	r4, r4, #16
+  48 003c 1960     		str	r1, [r3]
+  49 003e 2A70     		strb	r2, [r5]
+  50 0040 090C     		lsr	r1, r1, #16
+  51 0042 1120     		mov	r0, #17
+  52 0044 221C     		mov	r2, r4
+  53 0046 FFF7FEFF 		bl	sdCommand
+  54 004a FFF7FEFF 		bl	sdResp8b
+  55 004e 2870     		strb	r0, [r5]
+  56              	.L4:
+  57 0050 FFF7FEFF 		bl	sdResp8b
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s 			page 2
+
+
+  58 0054 264B     		ldr	r3, .L22
+  59 0056 1870     		strb	r0, [r3]
+  60 0058 FF28     		cmp	r0, #255
+  61 005a 08D1     		bne	.L5
+  62 005c 264B     		ldr	r3, .L22+8
+  63 005e 1A88     		ldrh	r2, [r3]
+  64 0060 013A     		sub	r2, r2, #1
+  65 0062 1204     		lsl	r2, r2, #16
+  66 0064 120C     		lsr	r2, r2, #16
+  67 0066 1A80     		strh	r2, [r3]
+  68 0068 274B     		ldr	r3, .L22+24
+  69 006a 9A42     		cmp	r2, r3
+  70 006c F0D1     		bne	.L4
+  71              	.L5:
+  72 006e 244B     		ldr	r3, .L22+16
+  73 0070 1978     		ldrb	r1, [r3]
+  74 0072 0029     		cmp	r1, #0
+  75 0074 01D1     		bne	.L7
+  76 0076 FE28     		cmp	r0, #254
+  77 0078 03D0     		beq	.L9
+  78              	.L7:
+  79 007a FFF7FEFF 		bl	sdResp8bError
+  80 007e 0120     		mov	r0, #1
+  81 0080 32E0     		b	.L10
+  82              	.L9:
+  83 0082 8023     		mov	r3, #128
+  84 0084 214A     		ldr	r2, .L22+28
+  85 0086 9B01     		lsl	r3, r3, #6
+  86 0088 1360     		str	r3, [r2]
+  87 008a 1C4B     		ldr	r3, .L22+12
+  88 008c 1960     		str	r1, [r3]
+  89 008e 05E0     		b	.L11
+  90              	.L12:
+  91 0090 FF20     		mov	r0, #255
+  92 0092 FFF7FEFF 		bl	spiSend
+  93 0096 2368     		ldr	r3, [r4]
+  94 0098 0133     		add	r3, r3, #1
+  95 009a 2360     		str	r3, [r4]
+  96              	.L11:
+  97 009c 174C     		ldr	r4, .L22+12
+  98 009e 2368     		ldr	r3, [r4]
+  99 00a0 BB42     		cmp	r3, r7
+ 100 00a2 F5D3     		bcc	.L12
+ 101 00a4 0023     		mov	r3, #0
+ 102 00a6 0CE0     		b	.L21
+ 103              	.L15:
+ 104 00a8 FF20     		mov	r0, #255
+ 105 00aa FFF7FEFF 		bl	spiSend
+ 106 00ae 114B     		ldr	r3, .L22+4
+ 107 00b0 009A     		ldr	r2, [sp]
+ 108 00b2 1870     		strb	r0, [r3]
+ 109 00b4 2368     		ldr	r3, [r4]
+ 110 00b6 9342     		cmp	r3, r2
+ 111 00b8 01D2     		bcs	.L16
+ 112 00ba 3070     		strb	r0, [r6]
+ 113 00bc 0136     		add	r6, r6, #1
+ 114              	.L16:
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s 			page 3
+
+
+ 115 00be 2368     		ldr	r3, [r4]
+ 116 00c0 0133     		add	r3, r3, #1
+ 117              	.L21:
+ 118 00c2 2360     		str	r3, [r4]
+ 119 00c4 0D4C     		ldr	r4, .L22+12
+ 120 00c6 8023     		mov	r3, #128
+ 121 00c8 9B00     		lsl	r3, r3, #2
+ 122 00ca 2268     		ldr	r2, [r4]
+ 123 00cc DB1B     		sub	r3, r3, r7
+ 124 00ce 9A42     		cmp	r2, r3
+ 125 00d0 EAD3     		bcc	.L15
+ 126 00d2 FF20     		mov	r0, #255
+ 127 00d4 FFF7FEFF 		bl	spiSend
+ 128 00d8 FF20     		mov	r0, #255
+ 129 00da FFF7FEFF 		bl	spiSend
+ 130 00de 8023     		mov	r3, #128
+ 131 00e0 0B4A     		ldr	r2, .L22+32
+ 132 00e2 9B01     		lsl	r3, r3, #6
+ 133 00e4 1360     		str	r3, [r2]
+ 134 00e6 0020     		mov	r0, #0
+ 135              	.L10:
+ 136 00e8 01B0     		add	sp, sp, #4
+ 137              		@ sp needed for prologue
+ 138 00ea F0BC     		pop	{r4, r5, r6, r7}
+ 139 00ec 02BC     		pop	{r1}
+ 140 00ee 0847     		bx	r1
+ 141              	.L23:
+ 142              		.align	2
+ 143              	.L22:
+ 144 00f0 00000000 		.word	firstblock
+ 145 00f4 00000000 		.word	c
+ 146 00f8 00000000 		.word	fb_timeout
+ 147 00fc 00000000 		.word	i
+ 148 0100 00000000 		.word	cardresp
+ 149 0104 00000000 		.word	place
+ 150 0108 FFFF0000 		.word	65535
+ 151 010c 0C8002E0 		.word	-536707060
+ 152 0110 048002E0 		.word	-536707068
+ 153              		.size	disk_readp, .-disk_readp
+ 154              		.align	2
+ 155              		.global	disk_initialize
+ 156              		.code 16
+ 157              		.thumb_func
+ 158              		.type	disk_initialize, %function
+ 159              	disk_initialize:
+ 160 0114 00B5     		push	{lr}
+ 161 0116 FFF7FEFF 		bl	initSpi
+ 162 011a FFF7FEFF 		bl	sdInit
+ 163 011e 0306     		lsl	r3, r0, #24
+ 164 0120 01D5     		bpl	.L25
+ 165 0122 0120     		mov	r0, #1
+ 166 0124 09E0     		b	.L27
+ 167              	.L25:
+ 168 0126 FFF7FEFF 		bl	sdState
+ 169 012a 0306     		lsl	r3, r0, #24
+ 170 012c 01D5     		bpl	.L28
+ 171 012e 0320     		mov	r0, #3
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s 			page 4
+
+
+ 172 0130 03E0     		b	.L27
+ 173              	.L28:
+ 174 0132 0820     		mov	r0, #8
+ 175 0134 FFF7FEFF 		bl	setSpiSpeed
+ 176 0138 0020     		mov	r0, #0
+ 177              	.L27:
+ 178              		@ sp needed for prologue
+ 179 013a 02BC     		pop	{r1}
+ 180 013c 0847     		bx	r1
+ 181              		.size	disk_initialize, .-disk_initialize
+ 182              		.global	fb_timeout
+ 183 013e C046     		.data
+ 184              		.align	1
+ 185              		.type	fb_timeout, %object
+ 186              		.size	fb_timeout, 2
+ 187              	fb_timeout:
+ 188 0000 FFFF     		.short	-1
+ 189              		.comm	cardresp,1,1
+ 190              		.comm	firstblock,1,1
+ 191              		.comm	c,1,1
+ 192              		.comm	i,4,4
+ 193              		.comm	place,4,4
+ 194              		.ident	"GCC: (GNU) 4.1.1"
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 diskio.c
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s:1      .text:00000000 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s:9      .text:00000000 disk_writep
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s:20     .text:00000004 disk_readp
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s:144    .text:000000f0 $d
+                            *COM*:00000001 firstblock
+                            *COM*:00000001 c
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s:187    .data:00000000 fb_timeout
+                            *COM*:00000004 i
+                            *COM*:00000001 cardresp
+                            *COM*:00000004 place
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s:159    .text:00000114 disk_initialize
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccEdlwh6.s:156    .text:00000114 $t
+
+UNDEFINED SYMBOLS
+setSpiSpeed
+sdCommand
+sdResp8b
+sdResp8bError
+spiSend
+initSpi
+sdInit
+sdState
