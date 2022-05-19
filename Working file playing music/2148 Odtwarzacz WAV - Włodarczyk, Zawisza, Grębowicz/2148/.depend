@@ -1,0 +1,17 @@
+main.o: main.c startup/lpc2xxx.h irq/irq_handler.h timer.h general.h \
+ VIC.h sd.h types.h startup/config.h pff.h integer.h startup/printf_P.h \
+ startup/config.h startup/consol.h startup/printf_init.h lcd.h \
+ startup/general.h spi.h startup/lpc2xxx.h testMotor.c wavFunctions.c \
+ lcd_hw.h lcd2.h
+LCD.o: LCD.c startup/lpc2xxx.h LCD.h startup/general.h
+sd.o: sd.c startup/lpc2xxx.h types.h startup/config.h startup/printf_P.h \
+ startup/config.h startup/consol.h sd.h pff.h integer.h spi.h \
+ startup/lpc2xxx.h
+spi.o: spi.c startup/lpc2xxx.h spi.h types.h startup/config.h integer.h \
+ startup/lpc2xxx.h
+diskio.o: diskio.c diskio.h integer.h spi.h types.h startup/config.h \
+ startup/lpc2xxx.h sd.h pff.h
+pff.o: pff.c pff.h integer.h diskio.h
+lcd2.o: lcd2.c lcd2.h startup/general.h ascii.h lcd_hw.h \
+ startup/lpc2xxx.h
+lcd_hw.o: lcd_hw.c startup/lpc2xxx.h lcd_hw.h startup/general.h

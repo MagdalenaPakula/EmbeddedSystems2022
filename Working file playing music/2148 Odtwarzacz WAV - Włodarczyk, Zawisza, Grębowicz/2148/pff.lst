@@ -1,0 +1,1660 @@
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 1
+
+
+   1              		.code	16
+   2              		.file	"pff.c"
+   3              		.text
+   4              		.align	2
+   5              		.code 16
+   6              		.thumb_func
+   7              		.type	clust2sect, %function
+   8              	clust2sect:
+   9 0000 074B     		ldr	r3, .L6
+  10 0002 1968     		ldr	r1, [r3]
+  11 0004 CB68     		ldr	r3, [r1, #12]
+  12 0006 0238     		sub	r0, r0, #2
+  13 0008 023B     		sub	r3, r3, #2
+  14              		@ lr needed for prologue
+  15 000a 9842     		cmp	r0, r3
+  16 000c 01D3     		bcc	.L2
+  17 000e 0020     		mov	r0, #0
+  18 0010 04E0     		b	.L4
+  19              	.L2:
+  20 0012 4B78     		ldrb	r3, [r1, #1]
+  21 0014 1A1C     		mov	r2, r3
+  22 0016 4243     		mul	r2, r0
+  23 0018 8B69     		ldr	r3, [r1, #24]
+  24 001a D018     		add	r0, r2, r3
+  25              	.L4:
+  26              		@ sp needed for prologue
+  27 001c 7047     		bx	lr
+  28              	.L7:
+  29 001e 0000     		.align	2
+  30              	.L6:
+  31 0020 00000000 		.word	FatFs
+  32              		.size	clust2sect, .-clust2sect
+  33              		.align	2
+  34              		.code 16
+  35              		.thumb_func
+  36              		.type	dir_rewind, %function
+  37              	dir_rewind:
+  38 0024 10B5     		push	{r4, lr}
+  39 0026 124B     		ldr	r3, .L21
+  40 0028 1A68     		ldr	r2, [r3]
+  41 002a 0023     		mov	r3, #0
+  42 002c 041C     		mov	r4, r0
+  43 002e 0380     		strh	r3, [r0]
+  44 0030 8068     		ldr	r0, [r0, #8]
+  45 0032 0128     		cmp	r0, #1
+  46 0034 12D0     		beq	.L9
+  47 0036 D368     		ldr	r3, [r2, #12]
+  48 0038 9842     		cmp	r0, r3
+  49 003a 0FD2     		bcs	.L9
+  50 003c 0028     		cmp	r0, #0
+  51 003e 11D1     		bne	.L12
+  52 0040 1378     		ldrb	r3, [r2]
+  53 0042 032B     		cmp	r3, #3
+  54 0044 0CD1     		bne	.L14
+  55 0046 5069     		ldr	r0, [r2, #20]
+  56 0048 E060     		str	r0, [r4, #12]
+  57 004a 0028     		cmp	r0, #0
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 2
+
+
+  58 004c 02D0     		beq	.L16
+  59              	.L17:
+  60 004e FFF7D7FF 		bl	clust2sect
+  61 0052 00E0     		b	.L18
+  62              	.L16:
+  63 0054 5069     		ldr	r0, [r2, #20]
+  64              	.L18:
+  65 0056 2061     		str	r0, [r4, #16]
+  66 0058 0020     		mov	r0, #0
+  67 005a 05E0     		b	.L19
+  68              	.L9:
+  69 005c 0120     		mov	r0, #1
+  70 005e 03E0     		b	.L19
+  71              	.L14:
+  72 0060 E060     		str	r0, [r4, #12]
+  73 0062 F7E7     		b	.L16
+  74              	.L12:
+  75 0064 E060     		str	r0, [r4, #12]
+  76 0066 F2E7     		b	.L17
+  77              	.L19:
+  78              		@ sp needed for prologue
+  79 0068 10BC     		pop	{r4}
+  80 006a 02BC     		pop	{r1}
+  81 006c 0847     		bx	r1
+  82              	.L22:
+  83 006e 0000     		.align	2
+  84              	.L21:
+  85 0070 00000000 		.word	FatFs
+  86              		.size	dir_rewind, .-dir_rewind
+  87              		.align	2
+  88              		.code 16
+  89              		.thumb_func
+  90              		.type	check_fs, %function
+  91              	check_fs:
+  92 0074 70B5     		push	{r4, r5, r6, lr}
+  93 0076 FF22     		mov	r2, #255
+  94 0078 5200     		lsl	r2, r2, #1
+  95 007a 0223     		mov	r3, #2
+  96 007c 041C     		mov	r4, r0
+  97 007e 0D1C     		mov	r5, r1
+  98 0080 FFF7FEFF 		bl	disk_readp
+  99 0084 0028     		cmp	r0, #0
+ 100 0086 01D0     		beq	.L24
+ 101 0088 0320     		mov	r0, #3
+ 102 008a 35E0     		b	.L26
+ 103              	.L24:
+ 104 008c 6378     		ldrb	r3, [r4, #1]
+ 105 008e 2278     		ldrb	r2, [r4]
+ 106 0090 1B02     		lsl	r3, r3, #8
+ 107 0092 1A43     		orr	r2, r2, r3
+ 108 0094 1204     		lsl	r2, r2, #16
+ 109 0096 1A4B     		ldr	r3, .L36
+ 110 0098 1214     		asr	r2, r2, #16
+ 111 009a 661C     		add	r6, r4, #1
+ 112 009c 9A42     		cmp	r2, r3
+ 113 009e 01D0     		beq	.L27
+ 114 00a0 0220     		mov	r0, #2
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 3
+
+
+ 115 00a2 29E0     		b	.L26
+ 116              	.L27:
+ 117 00a4 201C     		mov	r0, r4
+ 118 00a6 291C     		mov	r1, r5
+ 119 00a8 3622     		mov	r2, #54
+ 120 00aa 0223     		mov	r3, #2
+ 121 00ac FFF7FEFF 		bl	disk_readp
+ 122 00b0 0028     		cmp	r0, #0
+ 123 00b2 08D1     		bne	.L29
+ 124 00b4 6378     		ldrb	r3, [r4, #1]
+ 125 00b6 2278     		ldrb	r2, [r4]
+ 126 00b8 1B02     		lsl	r3, r3, #8
+ 127 00ba 1A43     		orr	r2, r2, r3
+ 128 00bc 1204     		lsl	r2, r2, #16
+ 129 00be 114B     		ldr	r3, .L36+4
+ 130 00c0 1214     		asr	r2, r2, #16
+ 131 00c2 9A42     		cmp	r2, r3
+ 132 00c4 18D0     		beq	.L26
+ 133              	.L29:
+ 134 00c6 201C     		mov	r0, r4
+ 135 00c8 291C     		mov	r1, r5
+ 136 00ca 5222     		mov	r2, #82
+ 137 00cc 0223     		mov	r3, #2
+ 138 00ce FFF7FEFF 		bl	disk_readp
+ 139 00d2 0028     		cmp	r0, #0
+ 140 00d4 01D0     		beq	.L32
+ 141 00d6 0120     		mov	r0, #1
+ 142 00d8 0EE0     		b	.L26
+ 143              	.L32:
+ 144 00da 3378     		ldrb	r3, [r6]
+ 145 00dc 2278     		ldrb	r2, [r4]
+ 146 00de 1B02     		lsl	r3, r3, #8
+ 147 00e0 1A43     		orr	r2, r2, r3
+ 148 00e2 1204     		lsl	r2, r2, #16
+ 149 00e4 074B     		ldr	r3, .L36+4
+ 150 00e6 1214     		asr	r2, r2, #16
+ 151 00e8 0021     		mov	r1, #0
+ 152 00ea 9A42     		cmp	r2, r3
+ 153 00ec 00D1     		bne	.L34
+ 154 00ee 0121     		mov	r1, #1
+ 155              	.L34:
+ 156 00f0 0123     		mov	r3, #1
+ 157 00f2 4B40     		eor	r3, r3, r1
+ 158 00f4 1B06     		lsl	r3, r3, #24
+ 159 00f6 180E     		lsr	r0, r3, #24
+ 160              	.L26:
+ 161              		@ sp needed for prologue
+ 162 00f8 70BC     		pop	{r4, r5, r6}
+ 163 00fa 02BC     		pop	{r1}
+ 164 00fc 0847     		bx	r1
+ 165              	.L37:
+ 166 00fe 0000     		.align	2
+ 167              	.L36:
+ 168 0100 55AAFFFF 		.word	-21931
+ 169 0104 46410000 		.word	16710
+ 170              		.size	check_fs, .-check_fs
+ 171              		.align	2
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 4
+
+
+ 172              		.code 16
+ 173              		.thumb_func
+ 174              		.type	get_fat, %function
+ 175              	get_fat:
+ 176 0108 70B5     		push	{r4, r5, r6, lr}
+ 177 010a 394B     		ldr	r3, .L57
+ 178 010c 81B0     		sub	sp, sp, #4
+ 179 010e 061C     		mov	r6, r0
+ 180 0110 1D68     		ldr	r5, [r3]
+ 181 0112 0128     		cmp	r0, #1
+ 182 0114 67D9     		bls	.L39
+ 183 0116 EB68     		ldr	r3, [r5, #12]
+ 184 0118 9842     		cmp	r0, r3
+ 185 011a 64D2     		bcs	.L39
+ 186 011c 2B78     		ldrb	r3, [r5]
+ 187 011e 022B     		cmp	r3, #2
+ 188 0120 31D0     		beq	.L43
+ 189 0122 032B     		cmp	r3, #3
+ 190 0124 43D0     		beq	.L44
+ 191 0126 012B     		cmp	r3, #1
+ 192 0128 5DD1     		bne	.L39
+ 193 012a 0304     		lsl	r3, r0, #16
+ 194 012c 1A0C     		lsr	r2, r3, #16
+ 195 012e 3149     		ldr	r1, .L57+4
+ 196 0130 5B0C     		lsr	r3, r3, #17
+ 197 0132 D218     		add	r2, r2, r3
+ 198 0134 1304     		lsl	r3, r2, #16
+ 199 0136 0A40     		and	r2, r2, r1
+ 200 0138 5C0E     		lsr	r4, r3, #25
+ 201 013a 6846     		mov	r0, sp
+ 202 013c 2B69     		ldr	r3, [r5, #16]
+ 203 013e 8A42     		cmp	r2, r1
+ 204 0140 02D0     		beq	.L45
+ 205 0142 E118     		add	r1, r4, r3
+ 206 0144 0223     		mov	r3, #2
+ 207 0146 0DE0     		b	.L55
+ 208              	.L45:
+ 209 0148 E118     		add	r1, r4, r3
+ 210 014a 6846     		mov	r0, sp
+ 211 014c 0123     		mov	r3, #1
+ 212 014e FFF7FEFF 		bl	disk_readp
+ 213 0152 0028     		cmp	r0, #0
+ 214 0154 47D1     		bne	.L39
+ 215 0156 2969     		ldr	r1, [r5, #16]
+ 216 0158 6846     		mov	r0, sp
+ 217 015a 0131     		add	r1, r1, #1
+ 218 015c 6118     		add	r1, r4, r1
+ 219 015e 0130     		add	r0, r0, #1
+ 220 0160 0022     		mov	r2, #0
+ 221 0162 0123     		mov	r3, #1
+ 222              	.L55:
+ 223 0164 FFF7FEFF 		bl	disk_readp
+ 224 0168 0028     		cmp	r0, #0
+ 225 016a 3CD1     		bne	.L39
+ 226 016c 6B46     		mov	r3, sp
+ 227 016e 5A78     		ldrb	r2, [r3, #1]
+ 228 0170 1B78     		ldrb	r3, [r3]
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 5
+
+
+ 229 0172 1202     		lsl	r2, r2, #8
+ 230 0174 1343     		orr	r3, r3, r2
+ 231 0176 1804     		lsl	r0, r3, #16
+ 232 0178 010C     		lsr	r1, r0, #16
+ 233 017a F307     		lsl	r3, r6, #31
+ 234 017c 01D5     		bpl	.L49
+ 235 017e 000D     		lsr	r0, r0, #20
+ 236 0180 32E0     		b	.L51
+ 237              	.L49:
+ 238 0182 1D4B     		ldr	r3, .L57+8
+ 239 0184 2CE0     		b	.L56
+ 240              	.L43:
+ 241 0186 2B69     		ldr	r3, [r5, #16]
+ 242 0188 010A     		lsr	r1, r0, #8
+ 243 018a 021C     		mov	r2, r0
+ 244 018c C918     		add	r1, r1, r3
+ 245 018e FF23     		mov	r3, #255
+ 246 0190 1A40     		and	r2, r2, r3
+ 247 0192 5200     		lsl	r2, r2, #1
+ 248 0194 6846     		mov	r0, sp
+ 249 0196 0223     		mov	r3, #2
+ 250 0198 6C46     		mov	r4, sp
+ 251 019a FFF7FEFF 		bl	disk_readp
+ 252 019e 0028     		cmp	r0, #0
+ 253 01a0 21D1     		bne	.L39
+ 254 01a2 6378     		ldrb	r3, [r4, #1]
+ 255 01a4 2278     		ldrb	r2, [r4]
+ 256 01a6 1B02     		lsl	r3, r3, #8
+ 257 01a8 101C     		mov	r0, r2
+ 258 01aa 1843     		orr	r0, r0, r3
+ 259 01ac 1CE0     		b	.L51
+ 260              	.L44:
+ 261 01ae 2B69     		ldr	r3, [r5, #16]
+ 262 01b0 C109     		lsr	r1, r0, #7
+ 263 01b2 021C     		mov	r2, r0
+ 264 01b4 C918     		add	r1, r1, r3
+ 265 01b6 7F23     		mov	r3, #127
+ 266 01b8 1A40     		and	r2, r2, r3
+ 267 01ba 9200     		lsl	r2, r2, #2
+ 268 01bc 6846     		mov	r0, sp
+ 269 01be 0423     		mov	r3, #4
+ 270 01c0 6C46     		mov	r4, sp
+ 271 01c2 FFF7FEFF 		bl	disk_readp
+ 272 01c6 0028     		cmp	r0, #0
+ 273 01c8 0DD1     		bne	.L39
+ 274 01ca E278     		ldrb	r2, [r4, #3]
+ 275 01cc A378     		ldrb	r3, [r4, #2]
+ 276 01ce 1206     		lsl	r2, r2, #24
+ 277 01d0 1B04     		lsl	r3, r3, #16
+ 278 01d2 1A43     		orr	r2, r2, r3
+ 279 01d4 6178     		ldrb	r1, [r4, #1]
+ 280 01d6 2378     		ldrb	r3, [r4]
+ 281 01d8 0902     		lsl	r1, r1, #8
+ 282 01da 1A43     		orr	r2, r2, r3
+ 283 01dc 074B     		ldr	r3, .L57+12
+ 284 01de 1143     		orr	r1, r1, r2
+ 285              	.L56:
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 6
+
+
+ 286 01e0 081C     		mov	r0, r1
+ 287 01e2 1840     		and	r0, r0, r3
+ 288 01e4 00E0     		b	.L51
+ 289              	.L39:
+ 290 01e6 0120     		mov	r0, #1
+ 291              	.L51:
+ 292 01e8 01B0     		add	sp, sp, #4
+ 293              		@ sp needed for prologue
+ 294 01ea 70BC     		pop	{r4, r5, r6}
+ 295 01ec 02BC     		pop	{r1}
+ 296 01ee 0847     		bx	r1
+ 297              	.L58:
+ 298              		.align	2
+ 299              	.L57:
+ 300 01f0 00000000 		.word	FatFs
+ 301 01f4 FF010000 		.word	511
+ 302 01f8 FF0F0000 		.word	4095
+ 303 01fc FFFFFF0F 		.word	268435455
+ 304              		.size	get_fat, .-get_fat
+ 305              		.global	__udivsi3
+ 306              		.align	2
+ 307              		.global	pf_lseek
+ 308              		.code 16
+ 309              		.thumb_func
+ 310              		.type	pf_lseek, %function
+ 311              	pf_lseek:
+ 312 0200 F0B5     		push	{r4, r5, r6, r7, lr}
+ 313 0202 2C4B     		ldr	r3, .L81
+ 314 0204 1D68     		ldr	r5, [r3]
+ 315 0206 81B0     		sub	sp, sp, #4
+ 316 0208 002D     		cmp	r5, #0
+ 317 020a 01D1     		bne	.L60
+ 318 020c 0620     		mov	r0, #6
+ 319 020e 4DE0     		b	.L62
+ 320              	.L60:
+ 321 0210 AB78     		ldrb	r3, [r5, #2]
+ 322 0212 DA07     		lsl	r2, r3, #31
+ 323 0214 01D4     		bmi	.L63
+ 324 0216 0520     		mov	r0, #5
+ 325 0218 48E0     		b	.L62
+ 326              	.L63:
+ 327 021a 2E6A     		ldr	r6, [r5, #32]
+ 328 021c 8642     		cmp	r6, r0
+ 329 021e 00D9     		bls	.L65
+ 330 0220 061C     		mov	r6, r0
+ 331              	.L65:
+ 332 0222 0023     		mov	r3, #0
+ 333 0224 E869     		ldr	r0, [r5, #28]
+ 334 0226 EB61     		str	r3, [r5, #28]
+ 335 0228 002E     		cmp	r6, #0
+ 336 022a 3ED0     		beq	.L66
+ 337 022c 6B78     		ldrb	r3, [r5, #1]
+ 338 022e 5F02     		lsl	r7, r3, #9
+ 339 0230 0028     		cmp	r0, #0
+ 340 0232 13D0     		beq	.L68
+ 341 0234 0138     		sub	r0, r0, #1
+ 342 0236 0090     		str	r0, [sp]
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 7
+
+
+ 343 0238 391C     		mov	r1, r7
+ 344 023a 701E     		sub	r0, r6, #1
+ 345 023c FFF7FEFF 		bl	__udivsi3
+ 346 0240 391C     		mov	r1, r7
+ 347 0242 041C     		mov	r4, r0
+ 348 0244 0098     		ldr	r0, [sp]
+ 349 0246 FFF7FEFF 		bl	__udivsi3
+ 350 024a 8442     		cmp	r4, r0
+ 351 024c 06D3     		bcc	.L68
+ 352 024e 009A     		ldr	r2, [sp]
+ 353 0250 7B42     		neg	r3, r7
+ 354 0252 1340     		and	r3, r3, r2
+ 355 0254 A86A     		ldr	r0, [r5, #40]
+ 356 0256 F61A     		sub	r6, r6, r3
+ 357 0258 EB61     		str	r3, [r5, #28]
+ 358 025a 0EE0     		b	.L80
+ 359              	.L68:
+ 360 025c 686A     		ldr	r0, [r5, #36]
+ 361 025e A862     		str	r0, [r5, #40]
+ 362 0260 0BE0     		b	.L80
+ 363              	.L72:
+ 364 0262 FFF751FF 		bl	get_fat
+ 365 0266 0128     		cmp	r0, #1
+ 366 0268 1BD9     		bls	.L73
+ 367 026a EB68     		ldr	r3, [r5, #12]
+ 368 026c 9842     		cmp	r0, r3
+ 369 026e 18D2     		bcs	.L73
+ 370 0270 EB69     		ldr	r3, [r5, #28]
+ 371 0272 DB19     		add	r3, r3, r7
+ 372 0274 A862     		str	r0, [r5, #40]
+ 373 0276 EB61     		str	r3, [r5, #28]
+ 374 0278 F61B     		sub	r6, r6, r7
+ 375              	.L80:
+ 376 027a BE42     		cmp	r6, r7
+ 377 027c F1D8     		bhi	.L72
+ 378 027e EB69     		ldr	r3, [r5, #28]
+ 379 0280 9B19     		add	r3, r3, r6
+ 380 0282 EB61     		str	r3, [r5, #28]
+ 381 0284 FFF7BCFE 		bl	clust2sect
+ 382 0288 0028     		cmp	r0, #0
+ 383 028a 0AD0     		beq	.L73
+ 384 028c F303     		lsl	r3, r6, #15
+ 385 028e 1A0E     		lsr	r2, r3, #24
+ 386 0290 094B     		ldr	r3, .L81+4
+ 387 0292 EA70     		strb	r2, [r5, #3]
+ 388 0294 1E42     		tst	r6, r3
+ 389 0296 08D0     		beq	.L66
+ 390 0298 8318     		add	r3, r0, r2
+ 391 029a EB62     		str	r3, [r5, #44]
+ 392 029c 531C     		add	r3, r2, #1
+ 393 029e EB70     		strb	r3, [r5, #3]
+ 394 02a0 03E0     		b	.L66
+ 395              	.L73:
+ 396 02a2 0023     		mov	r3, #0
+ 397 02a4 0120     		mov	r0, #1
+ 398 02a6 AB70     		strb	r3, [r5, #2]
+ 399 02a8 00E0     		b	.L62
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 8
+
+
+ 400              	.L66:
+ 401 02aa 0020     		mov	r0, #0
+ 402              	.L62:
+ 403 02ac 01B0     		add	sp, sp, #4
+ 404              		@ sp needed for prologue
+ 405 02ae F0BC     		pop	{r4, r5, r6, r7}
+ 406 02b0 02BC     		pop	{r1}
+ 407 02b2 0847     		bx	r1
+ 408              	.L82:
+ 409              		.align	2
+ 410              	.L81:
+ 411 02b4 00000000 		.word	FatFs
+ 412 02b8 FF010000 		.word	511
+ 413              		.size	pf_lseek, .-pf_lseek
+ 414              		.global	__umodsi3
+ 415              		.align	2
+ 416              		.global	pf_read
+ 417              		.code 16
+ 418              		.thumb_func
+ 419              		.type	pf_read, %function
+ 420              	pf_read:
+ 421 02bc F0B5     		push	{r4, r5, r6, r7, lr}
+ 422 02be 444B     		ldr	r3, .L111
+ 423 02c0 1860     		str	r0, [r3]
+ 424 02c2 444B     		ldr	r3, .L111+4
+ 425 02c4 171C     		mov	r7, r2
+ 426 02c6 1A68     		ldr	r2, [r3]
+ 427 02c8 434B     		ldr	r3, .L111+8
+ 428 02ca 81B0     		sub	sp, sp, #4
+ 429 02cc 0904     		lsl	r1, r1, #16
+ 430 02ce 1A60     		str	r2, [r3]
+ 431 02d0 0023     		mov	r3, #0
+ 432 02d2 0090     		str	r0, [sp]
+ 433 02d4 0E0C     		lsr	r6, r1, #16
+ 434 02d6 3B80     		strh	r3, [r7]
+ 435 02d8 002A     		cmp	r2, #0
+ 436 02da 01D1     		bne	.L84
+ 437 02dc 0620     		mov	r0, #6
+ 438 02de 73E0     		b	.L86
+ 439              	.L84:
+ 440 02e0 9378     		ldrb	r3, [r2, #2]
+ 441 02e2 D907     		lsl	r1, r3, #31
+ 442 02e4 01D4     		bmi	.L87
+ 443 02e6 0520     		mov	r0, #5
+ 444 02e8 6EE0     		b	.L86
+ 445              	.L87:
+ 446 02ea 136A     		ldr	r3, [r2, #32]
+ 447 02ec D269     		ldr	r2, [r2, #28]
+ 448 02ee 9A1A     		sub	r2, r3, r2
+ 449 02f0 3A4B     		ldr	r3, .L111+12
+ 450 02f2 1A60     		str	r2, [r3]
+ 451 02f4 9642     		cmp	r6, r2
+ 452 02f6 5ED9     		bls	.L110
+ 453 02f8 1304     		lsl	r3, r2, #16
+ 454 02fa 1E0C     		lsr	r6, r3, #16
+ 455 02fc 5BE0     		b	.L110
+ 456              	.L91:
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 9
+
+
+ 457 02fe 364B     		ldr	r3, .L111+8
+ 458 0300 1D68     		ldr	r5, [r3]
+ 459 0302 374B     		ldr	r3, .L111+16
+ 460 0304 EC69     		ldr	r4, [r5, #28]
+ 461 0306 1C42     		tst	r4, r3
+ 462 0308 23D1     		bne	.L92
+ 463 030a 600A     		lsr	r0, r4, #9
+ 464 030c 6978     		ldrb	r1, [r5, #1]
+ 465 030e FFF7FEFF 		bl	__umodsi3
+ 466 0312 0028     		cmp	r0, #0
+ 467 0314 0FD1     		bne	.L94
+ 468 0316 002C     		cmp	r4, #0
+ 469 0318 01D1     		bne	.L96
+ 470 031a 686A     		ldr	r0, [r5, #36]
+ 471 031c 02E0     		b	.L98
+ 472              	.L96:
+ 473 031e A86A     		ldr	r0, [r5, #40]
+ 474 0320 FFF7F2FE 		bl	get_fat
+ 475              	.L98:
+ 476 0324 2F4B     		ldr	r3, .L111+20
+ 477 0326 1860     		str	r0, [r3]
+ 478 0328 0128     		cmp	r0, #1
+ 479 032a 48D9     		bls	.L99
+ 480 032c 2A4B     		ldr	r3, .L111+8
+ 481 032e 1A68     		ldr	r2, [r3]
+ 482 0330 0023     		mov	r3, #0
+ 483 0332 9062     		str	r0, [r2, #40]
+ 484 0334 D370     		strb	r3, [r2, #3]
+ 485              	.L94:
+ 486 0336 284B     		ldr	r3, .L111+8
+ 487 0338 1C68     		ldr	r4, [r3]
+ 488 033a A06A     		ldr	r0, [r4, #40]
+ 489 033c FFF760FE 		bl	clust2sect
+ 490 0340 294B     		ldr	r3, .L111+24
+ 491 0342 1860     		str	r0, [r3]
+ 492 0344 0028     		cmp	r0, #0
+ 493 0346 3AD0     		beq	.L99
+ 494 0348 E378     		ldrb	r3, [r4, #3]
+ 495 034a C218     		add	r2, r0, r3
+ 496 034c 0133     		add	r3, r3, #1
+ 497 034e E262     		str	r2, [r4, #44]
+ 498 0350 E370     		strb	r3, [r4, #3]
+ 499              	.L92:
+ 500 0352 214B     		ldr	r3, .L111+8
+ 501 0354 1C68     		ldr	r4, [r3]
+ 502 0356 224B     		ldr	r3, .L111+16
+ 503 0358 E269     		ldr	r2, [r4, #28]
+ 504 035a 1A40     		and	r2, r2, r3
+ 505 035c 8023     		mov	r3, #128
+ 506 035e 9B00     		lsl	r3, r3, #2
+ 507 0360 9B1A     		sub	r3, r3, r2
+ 508 0362 1B04     		lsl	r3, r3, #16
+ 509 0364 214A     		ldr	r2, .L111+28
+ 510 0366 1B0C     		lsr	r3, r3, #16
+ 511 0368 1380     		strh	r3, [r2]
+ 512 036a B342     		cmp	r3, r6
+ 513 036c 00D9     		bls	.L102
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 10
+
+
+ 514 036e 1680     		strh	r6, [r2]
+ 515              	.L102:
+ 516 0370 009A     		ldr	r2, [sp]
+ 517 0372 002A     		cmp	r2, #0
+ 518 0374 01D1     		bne	.L104
+ 519 0376 0020     		mov	r0, #0
+ 520 0378 01E0     		b	.L106
+ 521              	.L104:
+ 522 037a 154B     		ldr	r3, .L111
+ 523 037c 1868     		ldr	r0, [r3]
+ 524              	.L106:
+ 525 037e A28B     		ldrh	r2, [r4, #28]
+ 526 0380 E16A     		ldr	r1, [r4, #44]
+ 527 0382 174B     		ldr	r3, .L111+16
+ 528 0384 194C     		ldr	r4, .L111+28
+ 529 0386 1A40     		and	r2, r2, r3
+ 530 0388 2388     		ldrh	r3, [r4]
+ 531 038a FFF7FEFF 		bl	disk_readp
+ 532 038e 184B     		ldr	r3, .L111+32
+ 533 0390 1860     		str	r0, [r3]
+ 534 0392 0028     		cmp	r0, #0
+ 535 0394 13D1     		bne	.L99
+ 536 0396 104B     		ldr	r3, .L111+8
+ 537 0398 1968     		ldr	r1, [r3]
+ 538 039a 2288     		ldrh	r2, [r4]
+ 539 039c CB69     		ldr	r3, [r1, #28]
+ 540 039e 9B18     		add	r3, r3, r2
+ 541 03a0 CB61     		str	r3, [r1, #28]
+ 542 03a2 0B49     		ldr	r1, .L111
+ 543 03a4 0B68     		ldr	r3, [r1]
+ 544 03a6 9B18     		add	r3, r3, r2
+ 545 03a8 0B60     		str	r3, [r1]
+ 546 03aa B31A     		sub	r3, r6, r2
+ 547 03ac 1B04     		lsl	r3, r3, #16
+ 548 03ae 1E0C     		lsr	r6, r3, #16
+ 549 03b0 3B88     		ldrh	r3, [r7]
+ 550 03b2 D218     		add	r2, r2, r3
+ 551 03b4 3A80     		strh	r2, [r7]
+ 552              	.L110:
+ 553 03b6 002E     		cmp	r6, #0
+ 554 03b8 A1D1     		bne	.L91
+ 555 03ba 0020     		mov	r0, #0
+ 556 03bc 04E0     		b	.L86
+ 557              	.L99:
+ 558 03be 064B     		ldr	r3, .L111+8
+ 559 03c0 1A68     		ldr	r2, [r3]
+ 560 03c2 0023     		mov	r3, #0
+ 561 03c4 9370     		strb	r3, [r2, #2]
+ 562 03c6 0120     		mov	r0, #1
+ 563              	.L86:
+ 564 03c8 01B0     		add	sp, sp, #4
+ 565              		@ sp needed for prologue
+ 566 03ca F0BC     		pop	{r4, r5, r6, r7}
+ 567 03cc 02BC     		pop	{r1}
+ 568 03ce 0847     		bx	r1
+ 569              	.L112:
+ 570              		.align	2
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 11
+
+
+ 571              	.L111:
+ 572 03d0 00000000 		.word	rbuff
+ 573 03d4 00000000 		.word	FatFs
+ 574 03d8 00000000 		.word	fs
+ 575 03dc 00000000 		.word	remain
+ 576 03e0 FF010000 		.word	511
+ 577 03e4 00000000 		.word	clst
+ 578 03e8 00000000 		.word	sect
+ 579 03ec 00000000 		.word	rcnt
+ 580 03f0 00000000 		.word	dr
+ 581              		.size	pf_read, .-pf_read
+ 582              		.align	2
+ 583              		.code 16
+ 584              		.thumb_func
+ 585              		.type	dir_next, %function
+ 586              	dir_next:
+ 587 03f4 70B5     		push	{r4, r5, r6, lr}
+ 588 03f6 184B     		ldr	r3, .L127
+ 589 03f8 1E68     		ldr	r6, [r3]
+ 590 03fa 0388     		ldrh	r3, [r0]
+ 591 03fc 0133     		add	r3, r3, #1
+ 592 03fe 1A04     		lsl	r2, r3, #16
+ 593 0400 150C     		lsr	r5, r2, #16
+ 594 0402 041C     		mov	r4, r0
+ 595 0404 002D     		cmp	r5, #0
+ 596 0406 23D0     		beq	.L114
+ 597 0408 0169     		ldr	r1, [r0, #16]
+ 598 040a 0029     		cmp	r1, #0
+ 599 040c 20D0     		beq	.L114
+ 600 040e 0F23     		mov	r3, #15
+ 601 0410 1D42     		tst	r5, r3
+ 602 0412 1AD1     		bne	.L117
+ 603 0414 4B1C     		add	r3, r1, #1
+ 604 0416 0361     		str	r3, [r0, #16]
+ 605 0418 C068     		ldr	r0, [r0, #12]
+ 606 041a 0028     		cmp	r0, #0
+ 607 041c 03D1     		bne	.L119
+ 608 041e B388     		ldrh	r3, [r6, #4]
+ 609 0420 AB42     		cmp	r3, r5
+ 610 0422 12D8     		bhi	.L117
+ 611 0424 14E0     		b	.L114
+ 612              	.L119:
+ 613 0426 7378     		ldrb	r3, [r6, #1]
+ 614 0428 120D     		lsr	r2, r2, #20
+ 615 042a 013B     		sub	r3, r3, #1
+ 616 042c 1A42     		tst	r2, r3
+ 617 042e 0CD1     		bne	.L117
+ 618 0430 FFF76AFE 		bl	get_fat
+ 619 0434 0128     		cmp	r0, #1
+ 620 0436 01D8     		bhi	.L122
+ 621 0438 0120     		mov	r0, #1
+ 622 043a 0AE0     		b	.L124
+ 623              	.L122:
+ 624 043c F368     		ldr	r3, [r6, #12]
+ 625 043e 9842     		cmp	r0, r3
+ 626 0440 06D2     		bcs	.L114
+ 627 0442 E060     		str	r0, [r4, #12]
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 12
+
+
+ 628 0444 FFF7DCFD 		bl	clust2sect
+ 629 0448 2061     		str	r0, [r4, #16]
+ 630              	.L117:
+ 631 044a 0020     		mov	r0, #0
+ 632 044c 2580     		strh	r5, [r4]
+ 633 044e 00E0     		b	.L124
+ 634              	.L114:
+ 635 0450 0320     		mov	r0, #3
+ 636              	.L124:
+ 637              		@ sp needed for prologue
+ 638 0452 70BC     		pop	{r4, r5, r6}
+ 639 0454 02BC     		pop	{r1}
+ 640 0456 0847     		bx	r1
+ 641              	.L128:
+ 642              		.align	2
+ 643              	.L127:
+ 644 0458 00000000 		.word	FatFs
+ 645              		.size	dir_next, .-dir_next
+ 646              		.align	2
+ 647              		.global	pf_readdir
+ 648              		.code 16
+ 649              		.thumb_func
+ 650              		.type	pf_readdir, %function
+ 651              	pf_readdir:
+ 652 045c 70B5     		push	{r4, r5, r6, lr}
+ 653 045e 474B     		ldr	r3, .L166
+ 654 0460 051C     		mov	r5, r0
+ 655 0462 1868     		ldr	r0, [r3]
+ 656 0464 8BB0     		sub	sp, sp, #44
+ 657 0466 0E1C     		mov	r6, r1
+ 658 0468 0028     		cmp	r0, #0
+ 659 046a 01D1     		bne	.L130
+ 660 046c 0620     		mov	r0, #6
+ 661 046e 80E0     		b	.L132
+ 662              	.L130:
+ 663 0470 6B46     		mov	r3, sp
+ 664 0472 8360     		str	r3, [r0, #8]
+ 665 0474 08AB     		add	r3, sp, #32
+ 666 0476 6B60     		str	r3, [r5, #4]
+ 667 0478 0029     		cmp	r1, #0
+ 668 047a 03D1     		bne	.L133
+ 669 047c 281C     		mov	r0, r5
+ 670 047e FFF7D1FD 		bl	dir_rewind
+ 671 0482 76E0     		b	.L132
+ 672              	.L133:
+ 673 0484 8468     		ldr	r4, [r0, #8]
+ 674 0486 0320     		mov	r0, #3
+ 675 0488 1AE0     		b	.L135
+ 676              	.L136:
+ 677 048a 2A88     		ldrh	r2, [r5]
+ 678 048c 0F23     		mov	r3, #15
+ 679 048e 1A40     		and	r2, r2, r3
+ 680 0490 5201     		lsl	r2, r2, #5
+ 681 0492 201C     		mov	r0, r4
+ 682 0494 2023     		mov	r3, #32
+ 683 0496 FFF7FEFF 		bl	disk_readp
+ 684 049a 0028     		cmp	r0, #0
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 13
+
+
+ 685 049c 01D0     		beq	.L137
+ 686 049e 0120     		mov	r0, #1
+ 687 04a0 13E0     		b	.L138
+ 688              	.L137:
+ 689 04a2 2378     		ldrb	r3, [r4]
+ 690 04a4 002B     		cmp	r3, #0
+ 691 04a6 5FD0     		beq	.L140
+ 692 04a8 E27A     		ldrb	r2, [r4, #11]
+ 693 04aa E52B     		cmp	r3, #229
+ 694 04ac 03D0     		beq	.L142
+ 695 04ae 2E2B     		cmp	r3, #46
+ 696 04b0 01D0     		beq	.L142
+ 697 04b2 1307     		lsl	r3, r2, #28
+ 698 04b4 0FD5     		bpl	.L145
+ 699              	.L142:
+ 700 04b6 281C     		mov	r0, r5
+ 701 04b8 FFF79CFF 		bl	dir_next
+ 702 04bc 0028     		cmp	r0, #0
+ 703 04be 04D1     		bne	.L138
+ 704              	.L135:
+ 705 04c0 2969     		ldr	r1, [r5, #16]
+ 706 04c2 0029     		cmp	r1, #0
+ 707 04c4 E1D1     		bne	.L136
+ 708 04c6 0028     		cmp	r0, #0
+ 709 04c8 50D0     		beq	.L147
+ 710              	.L138:
+ 711 04ca 0023     		mov	r3, #0
+ 712 04cc 2B61     		str	r3, [r5, #16]
+ 713 04ce 0328     		cmp	r0, #3
+ 714 04d0 4CD0     		beq	.L147
+ 715 04d2 0028     		cmp	r0, #0
+ 716 04d4 4DD1     		bne	.L132
+ 717              	.L145:
+ 718 04d6 2B69     		ldr	r3, [r5, #16]
+ 719 04d8 341C     		mov	r4, r6
+ 720 04da 0934     		add	r4, r4, #9
+ 721 04dc 002B     		cmp	r3, #0
+ 722 04de 39D0     		beq	.L150
+ 723 04e0 264B     		ldr	r3, .L166
+ 724 04e2 1B68     		ldr	r3, [r3]
+ 725 04e4 9868     		ldr	r0, [r3, #8]
+ 726 04e6 221C     		mov	r2, r4
+ 727 04e8 0021     		mov	r1, #0
+ 728              	.L152:
+ 729 04ea 0B5C     		ldrb	r3, [r1, r0]
+ 730 04ec 202B     		cmp	r3, #32
+ 731 04ee 07D0     		beq	.L153
+ 732 04f0 052B     		cmp	r3, #5
+ 733 04f2 00D1     		bne	.L155
+ 734 04f4 E523     		mov	r3, #229
+ 735              	.L155:
+ 736 04f6 0131     		add	r1, r1, #1
+ 737 04f8 1370     		strb	r3, [r2]
+ 738 04fa 0132     		add	r2, r2, #1
+ 739 04fc 0829     		cmp	r1, #8
+ 740 04fe F4D1     		bne	.L152
+ 741              	.L153:
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 14
+
+
+ 742 0500 037A     		ldrb	r3, [r0, #8]
+ 743 0502 011C     		mov	r1, r0
+ 744 0504 0831     		add	r1, r1, #8
+ 745 0506 202B     		cmp	r3, #32
+ 746 0508 01D1     		bne	.L157
+ 747 050a 141C     		mov	r4, r2
+ 748 050c 0BE0     		b	.L159
+ 749              	.L157:
+ 750 050e 2E23     		mov	r3, #46
+ 751 0510 1370     		strb	r3, [r2]
+ 752 0512 541C     		add	r4, r2, #1
+ 753              	.L160:
+ 754 0514 0B78     		ldrb	r3, [r1]
+ 755 0516 202B     		cmp	r3, #32
+ 756 0518 05D0     		beq	.L159
+ 757 051a 2370     		strb	r3, [r4]
+ 758 051c 0134     		add	r4, r4, #1
+ 759 051e 131D     		add	r3, r2, #4
+ 760 0520 0131     		add	r1, r1, #1
+ 761 0522 9C42     		cmp	r4, r3
+ 762 0524 F6D1     		bne	.L160
+ 763              	.L159:
+ 764 0526 C37A     		ldrb	r3, [r0, #11]
+ 765 0528 3372     		strb	r3, [r6, #8]
+ 766 052a C27F     		ldrb	r2, [r0, #31]
+ 767 052c 837F     		ldrb	r3, [r0, #30]
+ 768 052e 1206     		lsl	r2, r2, #24
+ 769 0530 1B04     		lsl	r3, r3, #16
+ 770 0532 417F     		ldrb	r1, [r0, #29]
+ 771 0534 1A43     		orr	r2, r2, r3
+ 772 0536 037F     		ldrb	r3, [r0, #28]
+ 773 0538 0902     		lsl	r1, r1, #8
+ 774 053a 1A43     		orr	r2, r2, r3
+ 775 053c 1143     		orr	r1, r1, r2
+ 776 053e 3160     		str	r1, [r6]
+ 777 0540 427E     		ldrb	r2, [r0, #25]
+ 778 0542 037E     		ldrb	r3, [r0, #24]
+ 779 0544 1202     		lsl	r2, r2, #8
+ 780 0546 1343     		orr	r3, r3, r2
+ 781 0548 B380     		strh	r3, [r6, #4]
+ 782 054a C27D     		ldrb	r2, [r0, #23]
+ 783 054c 837D     		ldrb	r3, [r0, #22]
+ 784 054e 1202     		lsl	r2, r2, #8
+ 785 0550 1343     		orr	r3, r3, r2
+ 786 0552 F380     		strh	r3, [r6, #6]
+ 787              	.L150:
+ 788 0554 0026     		mov	r6, #0
+ 789 0556 2670     		strb	r6, [r4]
+ 790 0558 281C     		mov	r0, r5
+ 791 055a FFF74BFF 		bl	dir_next
+ 792 055e 0328     		cmp	r0, #3
+ 793 0560 07D1     		bne	.L132
+ 794 0562 0020     		mov	r0, #0
+ 795 0564 2E61     		str	r6, [r5, #16]
+ 796 0566 04E0     		b	.L132
+ 797              	.L140:
+ 798 0568 0320     		mov	r0, #3
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 15
+
+
+ 799 056a AEE7     		b	.L138
+ 800              	.L147:
+ 801 056c 341C     		mov	r4, r6
+ 802 056e 0934     		add	r4, r4, #9
+ 803 0570 F0E7     		b	.L150
+ 804              	.L132:
+ 805 0572 0BB0     		add	sp, sp, #44
+ 806              		@ sp needed for prologue
+ 807 0574 70BC     		pop	{r4, r5, r6}
+ 808 0576 02BC     		pop	{r1}
+ 809 0578 0847     		bx	r1
+ 810              	.L167:
+ 811 057a 0000     		.align	2
+ 812              	.L166:
+ 813 057c 00000000 		.word	FatFs
+ 814              		.size	pf_readdir, .-pf_readdir
+ 815              		.align	2
+ 816              		.code 16
+ 817              		.thumb_func
+ 818              		.type	follow_path, %function
+ 819              	follow_path:
+ 820 0580 F0B5     		push	{r4, r5, r6, r7, lr}
+ 821 0582 81B0     		sub	sp, sp, #4
+ 822 0584 061C     		mov	r6, r0
+ 823 0586 0F1C     		mov	r7, r1
+ 824 0588 00E0     		b	.L169
+ 825              	.L170:
+ 826 058a 0137     		add	r7, r7, #1
+ 827              	.L169:
+ 828 058c 3B78     		ldrb	r3, [r7]
+ 829 058e 202B     		cmp	r3, #32
+ 830 0590 FBD0     		beq	.L170
+ 831 0592 2F2B     		cmp	r3, #47
+ 832 0594 00D1     		bne	.L172
+ 833 0596 0137     		add	r7, r7, #1
+ 834              	.L172:
+ 835 0598 0024     		mov	r4, #0
+ 836 059a B460     		str	r4, [r6, #8]
+ 837 059c 3B78     		ldrb	r3, [r7]
+ 838 059e 202B     		cmp	r3, #32
+ 839 05a0 07D8     		bhi	.L217
+ 840 05a2 301C     		mov	r0, r6
+ 841 05a4 FFF73EFD 		bl	dir_rewind
+ 842 05a8 454B     		ldr	r3, .L220
+ 843 05aa 1B68     		ldr	r3, [r3]
+ 844 05ac 9B68     		ldr	r3, [r3, #8]
+ 845 05ae 1C70     		strb	r4, [r3]
+ 846 05b0 82E0     		b	.L176
+ 847              	.L217:
+ 848 05b2 7068     		ldr	r0, [r6, #4]
+ 849 05b4 0022     		mov	r2, #0
+ 850              	.L177:
+ 851 05b6 2023     		mov	r3, #32
+ 852 05b8 1354     		strb	r3, [r2, r0]
+ 853 05ba 0132     		add	r2, r2, #1
+ 854 05bc 0B2A     		cmp	r2, #11
+ 855 05be FAD1     		bne	.L177
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 16
+
+
+ 856 05c0 0022     		mov	r2, #0
+ 857 05c2 0824     		mov	r4, #8
+ 858 05c4 0021     		mov	r1, #0
+ 859 05c6 0092     		str	r2, [sp]
+ 860 05c8 01E0     		b	.L219
+ 861              	.L215:
+ 862 05ca 0B24     		mov	r4, #11
+ 863 05cc 0821     		mov	r1, #8
+ 864              	.L219:
+ 865 05ce 009B     		ldr	r3, [sp]
+ 866 05d0 FA5C     		ldrb	r2, [r7, r3]
+ 867 05d2 0133     		add	r3, r3, #1
+ 868 05d4 1B06     		lsl	r3, r3, #24
+ 869 05d6 1B0E     		lsr	r3, r3, #24
+ 870 05d8 0093     		str	r3, [sp]
+ 871 05da 202A     		cmp	r2, #32
+ 872 05dc 19D9     		bls	.L181
+ 873 05de 2F2A     		cmp	r2, #47
+ 874 05e0 17D0     		beq	.L181
+ 875 05e2 2E2A     		cmp	r2, #46
+ 876 05e4 01D0     		beq	.L184
+ 877 05e6 A142     		cmp	r1, r4
+ 878 05e8 04D3     		bcc	.L186
+ 879              	.L184:
+ 880 05ea 082C     		cmp	r4, #8
+ 881 05ec 11D1     		bne	.L181
+ 882 05ee 2E2A     		cmp	r2, #46
+ 883 05f0 EBD0     		beq	.L215
+ 884 05f2 0EE0     		b	.L181
+ 885              	.L186:
+ 886 05f4 131C     		mov	r3, r2
+ 887 05f6 613B     		sub	r3, r3, #97
+ 888 05f8 1B06     		lsl	r3, r3, #24
+ 889 05fa 1B0E     		lsr	r3, r3, #24
+ 890 05fc 192B     		cmp	r3, #25
+ 891 05fe 03D8     		bhi	.L188
+ 892 0600 131C     		mov	r3, r2
+ 893 0602 203B     		sub	r3, r3, #32
+ 894 0604 1B06     		lsl	r3, r3, #24
+ 895 0606 1A0E     		lsr	r2, r3, #24
+ 896              	.L188:
+ 897 0608 4B1C     		add	r3, r1, #1
+ 898 060a 1B06     		lsl	r3, r3, #24
+ 899 060c 4254     		strb	r2, [r0, r1]
+ 900 060e 190E     		lsr	r1, r3, #24
+ 901 0610 DDE7     		b	.L219
+ 902              	.L181:
+ 903 0612 0023     		mov	r3, #0
+ 904 0614 C372     		strb	r3, [r0, #11]
+ 905 0616 202A     		cmp	r2, #32
+ 906 0618 01D8     		bhi	.L190
+ 907 061a 0123     		mov	r3, #1
+ 908 061c C372     		strb	r3, [r0, #11]
+ 909              	.L190:
+ 910 061e 301C     		mov	r0, r6
+ 911 0620 FFF700FD 		bl	dir_rewind
+ 912 0624 0028     		cmp	r0, #0
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 17
+
+
+ 913 0626 2AD1     		bne	.L191
+ 914 0628 254B     		ldr	r3, .L220
+ 915 062a 1B68     		ldr	r3, [r3]
+ 916 062c 9D68     		ldr	r5, [r3, #8]
+ 917              	.L193:
+ 918 062e 3288     		ldrh	r2, [r6]
+ 919 0630 0F23     		mov	r3, #15
+ 920 0632 1A40     		and	r2, r2, r3
+ 921 0634 3169     		ldr	r1, [r6, #16]
+ 922 0636 5201     		lsl	r2, r2, #5
+ 923 0638 281C     		mov	r0, r5
+ 924 063a 2023     		mov	r3, #32
+ 925 063c FFF7FEFF 		bl	disk_readp
+ 926 0640 0028     		cmp	r0, #0
+ 927 0642 01D0     		beq	.L194
+ 928 0644 0120     		mov	r0, #1
+ 929 0646 1AE0     		b	.L191
+ 930              	.L194:
+ 931 0648 2B78     		ldrb	r3, [r5]
+ 932 064a 0020     		mov	r0, #0
+ 933 064c 002B     		cmp	r3, #0
+ 934 064e 18D0     		beq	.L196
+ 935 0650 EB7A     		ldrb	r3, [r5, #11]
+ 936 0652 1A07     		lsl	r2, r3, #28
+ 937 0654 0ED4     		bmi	.L198
+ 938 0656 7468     		ldr	r4, [r6, #4]
+ 939 0658 0021     		mov	r1, #0
+ 940 065a 02E0     		b	.L200
+ 941              	.L201:
+ 942 065c 0131     		add	r1, r1, #1
+ 943 065e 0B29     		cmp	r1, #11
+ 944 0660 04D0     		beq	.L202
+ 945              	.L200:
+ 946 0662 4A5D     		ldrb	r2, [r1, r5]
+ 947 0664 0B5D     		ldrb	r3, [r1, r4]
+ 948 0666 9A42     		cmp	r2, r3
+ 949 0668 F8D0     		beq	.L201
+ 950 066a 03E0     		b	.L198
+ 951              	.L202:
+ 952 066c E37A     		ldrb	r3, [r4, #11]
+ 953 066e 002B     		cmp	r3, #0
+ 954 0670 0DD0     		beq	.L216
+ 955 0672 21E0     		b	.L176
+ 956              	.L198:
+ 957 0674 301C     		mov	r0, r6
+ 958 0676 FFF7BDFE 		bl	dir_next
+ 959 067a 0028     		cmp	r0, #0
+ 960 067c D7D0     		beq	.L193
+ 961              	.L191:
+ 962 067e 0328     		cmp	r0, #3
+ 963 0680 1AD1     		bne	.L176
+ 964              	.L196:
+ 965 0682 7368     		ldr	r3, [r6, #4]
+ 966 0684 DB7A     		ldrb	r3, [r3, #11]
+ 967 0686 002B     		cmp	r3, #0
+ 968 0688 15D0     		beq	.L204
+ 969 068a 0320     		mov	r0, #3
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 18
+
+
+ 970 068c 14E0     		b	.L176
+ 971              	.L216:
+ 972 068e 0C4B     		ldr	r3, .L220
+ 973 0690 1B68     		ldr	r3, [r3]
+ 974 0692 9868     		ldr	r0, [r3, #8]
+ 975 0694 C37A     		ldrb	r3, [r0, #11]
+ 976 0696 DA06     		lsl	r2, r3, #27
+ 977 0698 0DD5     		bpl	.L204
+ 978 069a 009B     		ldr	r3, [sp]
+ 979 069c FF18     		add	r7, r7, r3
+ 980 069e 437D     		ldrb	r3, [r0, #21]
+ 981 06a0 027D     		ldrb	r2, [r0, #20]
+ 982 06a2 1B02     		lsl	r3, r3, #8
+ 983 06a4 C17E     		ldrb	r1, [r0, #27]
+ 984 06a6 1A43     		orr	r2, r2, r3
+ 985 06a8 837E     		ldrb	r3, [r0, #26]
+ 986 06aa 0902     		lsl	r1, r1, #8
+ 987 06ac 1204     		lsl	r2, r2, #16
+ 988 06ae 0B43     		orr	r3, r3, r1
+ 989 06b0 1A43     		orr	r2, r2, r3
+ 990 06b2 B260     		str	r2, [r6, #8]
+ 991 06b4 7DE7     		b	.L217
+ 992              	.L204:
+ 993 06b6 0420     		mov	r0, #4
+ 994              	.L176:
+ 995 06b8 01B0     		add	sp, sp, #4
+ 996              		@ sp needed for prologue
+ 997 06ba F0BC     		pop	{r4, r5, r6, r7}
+ 998 06bc 02BC     		pop	{r1}
+ 999 06be 0847     		bx	r1
+ 1000              	.L221:
+ 1001              		.align	2
+ 1002              	.L220:
+ 1003 06c0 00000000 		.word	FatFs
+ 1004              		.size	follow_path, .-follow_path
+ 1005              		.align	2
+ 1006              		.global	pf_opendir
+ 1007              		.code 16
+ 1008              		.thumb_func
+ 1009              		.type	pf_opendir, %function
+ 1010              	pf_opendir:
+ 1011 06c4 30B5     		push	{r4, r5, lr}
+ 1012 06c6 154B     		ldr	r3, .L233
+ 1013 06c8 1B68     		ldr	r3, [r3]
+ 1014 06ca 8BB0     		sub	sp, sp, #44
+ 1015 06cc 051C     		mov	r5, r0
+ 1016 06ce 002B     		cmp	r3, #0
+ 1017 06d0 01D1     		bne	.L223
+ 1018 06d2 0620     		mov	r0, #6
+ 1019 06d4 1EE0     		b	.L225
+ 1020              	.L223:
+ 1021 06d6 6C46     		mov	r4, sp
+ 1022 06d8 9C60     		str	r4, [r3, #8]
+ 1023 06da 08AB     		add	r3, sp, #32
+ 1024 06dc 4360     		str	r3, [r0, #4]
+ 1025 06de FFF74FFF 		bl	follow_path
+ 1026 06e2 0028     		cmp	r0, #0
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 19
+
+
+ 1027 06e4 13D1     		bne	.L226
+ 1028 06e6 2378     		ldrb	r3, [r4]
+ 1029 06e8 002B     		cmp	r3, #0
+ 1030 06ea 0DD0     		beq	.L228
+ 1031 06ec E37A     		ldrb	r3, [r4, #11]
+ 1032 06ee DA06     		lsl	r2, r3, #27
+ 1033 06f0 0FD5     		bpl	.L230
+ 1034 06f2 637D     		ldrb	r3, [r4, #21]
+ 1035 06f4 227D     		ldrb	r2, [r4, #20]
+ 1036 06f6 1B02     		lsl	r3, r3, #8
+ 1037 06f8 E17E     		ldrb	r1, [r4, #27]
+ 1038 06fa 1A43     		orr	r2, r2, r3
+ 1039 06fc A37E     		ldrb	r3, [r4, #26]
+ 1040 06fe 0902     		lsl	r1, r1, #8
+ 1041 0700 1204     		lsl	r2, r2, #16
+ 1042 0702 0B43     		orr	r3, r3, r1
+ 1043 0704 1A43     		orr	r2, r2, r3
+ 1044 0706 AA60     		str	r2, [r5, #8]
+ 1045              	.L228:
+ 1046 0708 281C     		mov	r0, r5
+ 1047 070a FFF78BFC 		bl	dir_rewind
+ 1048              	.L226:
+ 1049 070e 0328     		cmp	r0, #3
+ 1050 0710 00D1     		bne	.L225
+ 1051              	.L230:
+ 1052 0712 0420     		mov	r0, #4
+ 1053              	.L225:
+ 1054 0714 0BB0     		add	sp, sp, #44
+ 1055              		@ sp needed for prologue
+ 1056 0716 30BC     		pop	{r4, r5}
+ 1057 0718 02BC     		pop	{r1}
+ 1058 071a 0847     		bx	r1
+ 1059              	.L234:
+ 1060              		.align	2
+ 1061              	.L233:
+ 1062 071c 00000000 		.word	FatFs
+ 1063              		.size	pf_opendir, .-pf_opendir
+ 1064              		.align	2
+ 1065              		.global	pf_open
+ 1066              		.code 16
+ 1067              		.thumb_func
+ 1068              		.type	pf_open, %function
+ 1069              	pf_open:
+ 1070 0720 30B5     		push	{r4, r5, lr}
+ 1071 0722 1C4B     		ldr	r3, .L244
+ 1072 0724 1C68     		ldr	r4, [r3]
+ 1073 0726 90B0     		sub	sp, sp, #64
+ 1074 0728 011C     		mov	r1, r0
+ 1075 072a 002C     		cmp	r4, #0
+ 1076 072c 01D1     		bne	.L236
+ 1077 072e 0620     		mov	r0, #6
+ 1078 0730 2BE0     		b	.L238
+ 1079              	.L236:
+ 1080 0732 0023     		mov	r3, #0
+ 1081 0734 6D46     		mov	r5, sp
+ 1082 0736 A370     		strb	r3, [r4, #2]
+ 1083 0738 A560     		str	r5, [r4, #8]
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 20
+
+
+ 1084 073a 0DAB     		add	r3, sp, #52
+ 1085 073c 08A8     		add	r0, sp, #32
+ 1086 073e 0993     		str	r3, [sp, #36]
+ 1087 0740 FFF71EFF 		bl	follow_path
+ 1088 0744 0028     		cmp	r0, #0
+ 1089 0746 20D1     		bne	.L238
+ 1090 0748 2B78     		ldrb	r3, [r5]
+ 1091 074a 002B     		cmp	r3, #0
+ 1092 074c 1CD0     		beq	.L240
+ 1093 074e EB7A     		ldrb	r3, [r5, #11]
+ 1094 0750 DA06     		lsl	r2, r3, #27
+ 1095 0752 19D4     		bmi	.L240
+ 1096 0754 6B7D     		ldrb	r3, [r5, #21]
+ 1097 0756 2A7D     		ldrb	r2, [r5, #20]
+ 1098 0758 E97E     		ldrb	r1, [r5, #27]
+ 1099 075a 1B02     		lsl	r3, r3, #8
+ 1100 075c 1A43     		orr	r2, r2, r3
+ 1101 075e AB7E     		ldrb	r3, [r5, #26]
+ 1102 0760 0902     		lsl	r1, r1, #8
+ 1103 0762 0B43     		orr	r3, r3, r1
+ 1104 0764 1204     		lsl	r2, r2, #16
+ 1105 0766 1A43     		orr	r2, r2, r3
+ 1106 0768 6262     		str	r2, [r4, #36]
+ 1107 076a EA7F     		ldrb	r2, [r5, #31]
+ 1108 076c AB7F     		ldrb	r3, [r5, #30]
+ 1109 076e 1206     		lsl	r2, r2, #24
+ 1110 0770 1B04     		lsl	r3, r3, #16
+ 1111 0772 697F     		ldrb	r1, [r5, #29]
+ 1112 0774 1A43     		orr	r2, r2, r3
+ 1113 0776 2B7F     		ldrb	r3, [r5, #28]
+ 1114 0778 0902     		lsl	r1, r1, #8
+ 1115 077a 1A43     		orr	r2, r2, r3
+ 1116 077c 1143     		orr	r1, r1, r2
+ 1117 077e 0123     		mov	r3, #1
+ 1118 0780 2162     		str	r1, [r4, #32]
+ 1119 0782 E061     		str	r0, [r4, #28]
+ 1120 0784 A370     		strb	r3, [r4, #2]
+ 1121 0786 00E0     		b	.L238
+ 1122              	.L240:
+ 1123 0788 0320     		mov	r0, #3
+ 1124              	.L238:
+ 1125 078a 10B0     		add	sp, sp, #64
+ 1126              		@ sp needed for prologue
+ 1127 078c 30BC     		pop	{r4, r5}
+ 1128 078e 02BC     		pop	{r1}
+ 1129 0790 0847     		bx	r1
+ 1130              	.L245:
+ 1131 0792 0000     		.align	2
+ 1132              	.L244:
+ 1133 0794 00000000 		.word	FatFs
+ 1134              		.size	pf_open, .-pf_open
+ 1135              		.align	2
+ 1136              		.global	pf_write
+ 1137              		.code 16
+ 1138              		.thumb_func
+ 1139              		.type	pf_write, %function
+ 1140              	pf_write:
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 21
+
+
+ 1141 0798 F0B5     		push	{r4, r5, r6, r7, lr}
+ 1142 079a 474B     		ldr	r3, .L281
+ 1143 079c 1C68     		ldr	r4, [r3]
+ 1144 079e 81B0     		sub	sp, sp, #4
+ 1145 07a0 0904     		lsl	r1, r1, #16
+ 1146 07a2 0023     		mov	r3, #0
+ 1147 07a4 0092     		str	r2, [sp]
+ 1148 07a6 0E0C     		lsr	r6, r1, #16
+ 1149 07a8 1380     		strh	r3, [r2]
+ 1150 07aa 002C     		cmp	r4, #0
+ 1151 07ac 01D1     		bne	.L247
+ 1152 07ae 0620     		mov	r0, #6
+ 1153 07b0 7DE0     		b	.L249
+ 1154              	.L247:
+ 1155 07b2 A378     		ldrb	r3, [r4, #2]
+ 1156 07b4 DA07     		lsl	r2, r3, #31
+ 1157 07b6 01D4     		bmi	.L250
+ 1158 07b8 0520     		mov	r0, #5
+ 1159 07ba 78E0     		b	.L249
+ 1160              	.L250:
+ 1161 07bc 002E     		cmp	r6, #0
+ 1162 07be 0CD1     		bne	.L252
+ 1163 07c0 4025     		mov	r5, #64
+ 1164 07c2 2B42     		tst	r3, r5
+ 1165 07c4 05D0     		beq	.L254
+ 1166 07c6 0020     		mov	r0, #0
+ 1167 07c8 0021     		mov	r1, #0
+ 1168 07ca FFF7FEFF 		bl	disk_writep
+ 1169 07ce 0028     		cmp	r0, #0
+ 1170 07d0 6AD1     		bne	.L256
+ 1171              	.L254:
+ 1172 07d2 A378     		ldrb	r3, [r4, #2]
+ 1173 07d4 AB43     		bic	r3, r3, r5
+ 1174 07d6 A370     		strb	r3, [r4, #2]
+ 1175 07d8 64E0     		b	.L280
+ 1176              	.L252:
+ 1177 07da 5906     		lsl	r1, r3, #25
+ 1178 07dc 03D4     		bmi	.L257
+ 1179 07de E369     		ldr	r3, [r4, #28]
+ 1180 07e0 364A     		ldr	r2, .L281+4
+ 1181 07e2 1340     		and	r3, r3, r2
+ 1182 07e4 E361     		str	r3, [r4, #28]
+ 1183              	.L257:
+ 1184 07e6 226A     		ldr	r2, [r4, #32]
+ 1185 07e8 E369     		ldr	r3, [r4, #28]
+ 1186 07ea D21A     		sub	r2, r2, r3
+ 1187 07ec 9642     		cmp	r6, r2
+ 1188 07ee 01D9     		bls	.L259
+ 1189 07f0 1304     		lsl	r3, r2, #16
+ 1190 07f2 1E0C     		lsr	r6, r3, #16
+ 1191              	.L259:
+ 1192 07f4 071C     		mov	r7, r0
+ 1193 07f6 53E0     		b	.L261
+ 1194              	.L262:
+ 1195 07f8 E569     		ldr	r5, [r4, #28]
+ 1196 07fa 314B     		ldr	r3, .L281+8
+ 1197 07fc 1D42     		tst	r5, r3
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 22
+
+
+ 1198 07fe 24D1     		bne	.L263
+ 1199 0800 680A     		lsr	r0, r5, #9
+ 1200 0802 6178     		ldrb	r1, [r4, #1]
+ 1201 0804 FFF7FEFF 		bl	__umodsi3
+ 1202 0808 0028     		cmp	r0, #0
+ 1203 080a 0BD1     		bne	.L265
+ 1204 080c 002D     		cmp	r5, #0
+ 1205 080e 01D1     		bne	.L267
+ 1206 0810 606A     		ldr	r0, [r4, #36]
+ 1207 0812 02E0     		b	.L269
+ 1208              	.L267:
+ 1209 0814 A06A     		ldr	r0, [r4, #40]
+ 1210 0816 FFF777FC 		bl	get_fat
+ 1211              	.L269:
+ 1212 081a 0128     		cmp	r0, #1
+ 1213 081c 44D9     		bls	.L256
+ 1214 081e 0023     		mov	r3, #0
+ 1215 0820 A062     		str	r0, [r4, #40]
+ 1216 0822 E370     		strb	r3, [r4, #3]
+ 1217              	.L265:
+ 1218 0824 A06A     		ldr	r0, [r4, #40]
+ 1219 0826 FFF7EBFB 		bl	clust2sect
+ 1220 082a 0028     		cmp	r0, #0
+ 1221 082c 3CD0     		beq	.L256
+ 1222 082e E378     		ldrb	r3, [r4, #3]
+ 1223 0830 C118     		add	r1, r0, r3
+ 1224 0832 0133     		add	r3, r3, #1
+ 1225 0834 E162     		str	r1, [r4, #44]
+ 1226 0836 E370     		strb	r3, [r4, #3]
+ 1227 0838 0020     		mov	r0, #0
+ 1228 083a FFF7FEFF 		bl	disk_writep
+ 1229 083e 0028     		cmp	r0, #0
+ 1230 0840 32D1     		bne	.L256
+ 1231 0842 A378     		ldrb	r3, [r4, #2]
+ 1232 0844 4022     		mov	r2, #64
+ 1233 0846 1343     		orr	r3, r3, r2
+ 1234 0848 A370     		strb	r3, [r4, #2]
+ 1235              	.L263:
+ 1236 084a 1D4B     		ldr	r3, .L281+8
+ 1237 084c E269     		ldr	r2, [r4, #28]
+ 1238 084e 1A40     		and	r2, r2, r3
+ 1239 0850 8023     		mov	r3, #128
+ 1240 0852 9B00     		lsl	r3, r3, #2
+ 1241 0854 9B1A     		sub	r3, r3, r2
+ 1242 0856 1B04     		lsl	r3, r3, #16
+ 1243 0858 1B0C     		lsr	r3, r3, #16
+ 1244 085a 321C     		add	r2, r6, #0
+ 1245 085c 9E42     		cmp	r6, r3
+ 1246 085e 00D9     		bls	.L273
+ 1247 0860 1A1C     		add	r2, r3, #0
+ 1248              	.L273:
+ 1249 0862 1304     		lsl	r3, r2, #16
+ 1250 0864 1D0C     		lsr	r5, r3, #16
+ 1251 0866 381C     		mov	r0, r7
+ 1252 0868 291C     		mov	r1, r5
+ 1253 086a FFF7FEFF 		bl	disk_writep
+ 1254 086e 0028     		cmp	r0, #0
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 23
+
+
+ 1255 0870 1AD1     		bne	.L256
+ 1256 0872 0099     		ldr	r1, [sp]
+ 1257 0874 0B88     		ldrh	r3, [r1]
+ 1258 0876 E269     		ldr	r2, [r4, #28]
+ 1259 0878 EB18     		add	r3, r5, r3
+ 1260 087a 0B80     		strh	r3, [r1]
+ 1261 087c 104B     		ldr	r3, .L281+8
+ 1262 087e 5219     		add	r2, r2, r5
+ 1263 0880 E261     		str	r2, [r4, #28]
+ 1264 0882 1A42     		tst	r2, r3
+ 1265 0884 08D1     		bne	.L275
+ 1266 0886 0021     		mov	r1, #0
+ 1267 0888 FFF7FEFF 		bl	disk_writep
+ 1268 088c 0028     		cmp	r0, #0
+ 1269 088e 0BD1     		bne	.L256
+ 1270 0890 A378     		ldrb	r3, [r4, #2]
+ 1271 0892 4022     		mov	r2, #64
+ 1272 0894 9343     		bic	r3, r3, r2
+ 1273 0896 A370     		strb	r3, [r4, #2]
+ 1274              	.L275:
+ 1275 0898 731B     		sub	r3, r6, r5
+ 1276 089a 1B04     		lsl	r3, r3, #16
+ 1277 089c 7F19     		add	r7, r7, r5
+ 1278 089e 1E0C     		lsr	r6, r3, #16
+ 1279              	.L261:
+ 1280 08a0 002E     		cmp	r6, #0
+ 1281 08a2 A9D1     		bne	.L262
+ 1282              	.L280:
+ 1283 08a4 0020     		mov	r0, #0
+ 1284 08a6 02E0     		b	.L249
+ 1285              	.L256:
+ 1286 08a8 0023     		mov	r3, #0
+ 1287 08aa A370     		strb	r3, [r4, #2]
+ 1288 08ac 0120     		mov	r0, #1
+ 1289              	.L249:
+ 1290 08ae 01B0     		add	sp, sp, #4
+ 1291              		@ sp needed for prologue
+ 1292 08b0 F0BC     		pop	{r4, r5, r6, r7}
+ 1293 08b2 02BC     		pop	{r1}
+ 1294 08b4 0847     		bx	r1
+ 1295              	.L282:
+ 1296 08b6 0000     		.align	2
+ 1297              	.L281:
+ 1298 08b8 00000000 		.word	FatFs
+ 1299 08bc 00FEFFFF 		.word	-512
+ 1300 08c0 FF010000 		.word	511
+ 1301              		.size	pf_write, .-pf_write
+ 1302              		.align	2
+ 1303              		.global	pf_mount
+ 1304              		.code 16
+ 1305              		.thumb_func
+ 1306              		.type	pf_mount, %function
+ 1307              	pf_mount:
+ 1308 08c4 F0B5     		push	{r4, r5, r6, r7, lr}
+ 1309 08c6 5B4A     		ldr	r2, .L313
+ 1310 08c8 0023     		mov	r3, #0
+ 1311 08ca 89B0     		sub	sp, sp, #36
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 24
+
+
+ 1312 08cc 051C     		mov	r5, r0
+ 1313 08ce 1360     		str	r3, [r2]
+ 1314 08d0 0028     		cmp	r0, #0
+ 1315 08d2 00D1     		bne	.LCB1603
+ 1316 08d4 91E0     		b	.L312	@long jump
+ 1317              	.LCB1603:
+ 1318 08d6 FFF7FEFF 		bl	disk_initialize
+ 1319 08da C307     		lsl	r3, r0, #31
+ 1320 08dc 01D5     		bpl	.L287
+ 1321 08de 0220     		mov	r0, #2
+ 1322 08e0 A3E0     		b	.L286
+ 1323              	.L287:
+ 1324 08e2 6846     		mov	r0, sp
+ 1325 08e4 0021     		mov	r1, #0
+ 1326 08e6 6C46     		mov	r4, sp
+ 1327 08e8 FFF7C4FB 		bl	check_fs
+ 1328 08ec 0128     		cmp	r0, #1
+ 1329 08ee 01D0     		beq	.L289
+ 1330 08f0 0026     		mov	r6, #0
+ 1331 08f2 1AE0     		b	.L291
+ 1332              	.L289:
+ 1333 08f4 DF22     		mov	r2, #223
+ 1334 08f6 6846     		mov	r0, sp
+ 1335 08f8 0021     		mov	r1, #0
+ 1336 08fa 5200     		lsl	r2, r2, #1
+ 1337 08fc 1023     		mov	r3, #16
+ 1338 08fe FFF7FEFF 		bl	disk_readp
+ 1339 0902 0028     		cmp	r0, #0
+ 1340 0904 7BD1     		bne	.L292
+ 1341 0906 2379     		ldrb	r3, [r4, #4]
+ 1342 0908 002B     		cmp	r3, #0
+ 1343 090a 7AD0     		beq	.L294
+ 1344 090c E27A     		ldrb	r2, [r4, #11]
+ 1345 090e A37A     		ldrb	r3, [r4, #10]
+ 1346 0910 617A     		ldrb	r1, [r4, #9]
+ 1347 0912 1B04     		lsl	r3, r3, #16
+ 1348 0914 1206     		lsl	r2, r2, #24
+ 1349 0916 1A43     		orr	r2, r2, r3
+ 1350 0918 237A     		ldrb	r3, [r4, #8]
+ 1351 091a 0902     		lsl	r1, r1, #8
+ 1352 091c 0E1C     		mov	r6, r1
+ 1353 091e 1A43     		orr	r2, r2, r3
+ 1354 0920 1643     		orr	r6, r6, r2
+ 1355 0922 6846     		mov	r0, sp
+ 1356 0924 311C     		mov	r1, r6
+ 1357 0926 FFF7A5FB 		bl	check_fs
+ 1358              	.L291:
+ 1359 092a 0328     		cmp	r0, #3
+ 1360 092c 67D0     		beq	.L292
+ 1361 092e 0028     		cmp	r0, #0
+ 1362 0930 67D1     		bne	.L294
+ 1363 0932 6846     		mov	r0, sp
+ 1364 0934 311C     		mov	r1, r6
+ 1365 0936 0D22     		mov	r2, #13
+ 1366 0938 2423     		mov	r3, #36
+ 1367 093a 6C46     		mov	r4, sp
+ 1368 093c FFF7FEFF 		bl	disk_readp
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 25
+
+
+ 1369 0940 0028     		cmp	r0, #0
+ 1370 0942 5CD1     		bne	.L292
+ 1371 0944 A37A     		ldrb	r3, [r4, #10]
+ 1372 0946 627A     		ldrb	r2, [r4, #9]
+ 1373 0948 1B02     		lsl	r3, r3, #8
+ 1374 094a 1A43     		orr	r2, r3
+ 1375 094c 9446     		mov	ip, r2
+ 1376 094e 01D0     		beq	.L299
+ 1377 0950 6146     		mov	r1, ip
+ 1378 0952 09E0     		b	.L301
+ 1379              	.L299:
+ 1380 0954 A27E     		ldrb	r2, [r4, #26]
+ 1381 0956 637E     		ldrb	r3, [r4, #25]
+ 1382 0958 1206     		lsl	r2, r2, #24
+ 1383 095a 1B04     		lsl	r3, r3, #16
+ 1384 095c 1A43     		orr	r2, r2, r3
+ 1385 095e 217E     		ldrb	r1, [r4, #24]
+ 1386 0960 E37D     		ldrb	r3, [r4, #23]
+ 1387 0962 0902     		lsl	r1, r1, #8
+ 1388 0964 1A43     		orr	r2, r2, r3
+ 1389 0966 1143     		orr	r1, r1, r2
+ 1390              	.L301:
+ 1391 0968 6846     		mov	r0, sp
+ 1392 096a C378     		ldrb	r3, [r0, #3]
+ 1393 096c 8278     		ldrb	r2, [r0, #2]
+ 1394 096e 1F1C     		mov	r7, r3
+ 1395 0970 4F43     		mul	r7, r1
+ 1396 0972 4378     		ldrb	r3, [r0, #1]
+ 1397 0974 1202     		lsl	r2, r2, #8
+ 1398 0976 1343     		orr	r3, r3, r2
+ 1399 0978 F318     		add	r3, r6, r3
+ 1400 097a 2B61     		str	r3, [r5, #16]
+ 1401 097c 0378     		ldrb	r3, [r0]
+ 1402 097e 6B70     		strb	r3, [r5, #1]
+ 1403 0980 0279     		ldrb	r2, [r0, #4]
+ 1404 0982 4379     		ldrb	r3, [r0, #5]
+ 1405 0984 161C     		mov	r6, r2
+ 1406 0986 1B02     		lsl	r3, r3, #8
+ 1407 0988 1E43     		orr	r6, r6, r3
+ 1408 098a AE80     		strh	r6, [r5, #4]
+ 1409 098c C379     		ldrb	r3, [r0, #7]
+ 1410 098e 8279     		ldrb	r2, [r0, #6]
+ 1411 0990 1B02     		lsl	r3, r3, #8
+ 1412 0992 1A43     		orr	r2, r3
+ 1413 0994 9446     		mov	ip, r2
+ 1414 0996 01D0     		beq	.L302
+ 1415 0998 6146     		mov	r1, ip
+ 1416 099a 09E0     		b	.L304
+ 1417              	.L302:
+ 1418 099c 827D     		ldrb	r2, [r0, #22]
+ 1419 099e 437D     		ldrb	r3, [r0, #21]
+ 1420 09a0 1206     		lsl	r2, r2, #24
+ 1421 09a2 1B04     		lsl	r3, r3, #16
+ 1422 09a4 1A43     		orr	r2, r2, r3
+ 1423 09a6 017D     		ldrb	r1, [r0, #20]
+ 1424 09a8 C37C     		ldrb	r3, [r0, #19]
+ 1425 09aa 0902     		lsl	r1, r1, #8
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 26
+
+
+ 1426 09ac 1A43     		orr	r2, r2, r3
+ 1427 09ae 1143     		orr	r1, r1, r2
+ 1428              	.L304:
+ 1429 09b0 6C46     		mov	r4, sp
+ 1430 09b2 A378     		ldrb	r3, [r4, #2]
+ 1431 09b4 6078     		ldrb	r0, [r4, #1]
+ 1432 09b6 1B02     		lsl	r3, r3, #8
+ 1433 09b8 1843     		orr	r0, r0, r3
+ 1434 09ba 081A     		sub	r0, r1, r0
+ 1435 09bc 3309     		lsr	r3, r6, #4
+ 1436 09be C01B     		sub	r0, r0, r7
+ 1437 09c0 C01A     		sub	r0, r0, r3
+ 1438 09c2 6978     		ldrb	r1, [r5, #1]
+ 1439 09c4 FFF7FEFF 		bl	__udivsi3
+ 1440 09c8 1B4B     		ldr	r3, .L313+4
+ 1441 09ca 0230     		add	r0, r0, #2
+ 1442 09cc E860     		str	r0, [r5, #12]
+ 1443 09ce 9842     		cmp	r0, r3
+ 1444 09d0 01D8     		bhi	.L305
+ 1445 09d2 0123     		mov	r3, #1
+ 1446 09d4 03E0     		b	.L307
+ 1447              	.L305:
+ 1448 09d6 194B     		ldr	r3, .L313+8
+ 1449 09d8 9842     		cmp	r0, r3
+ 1450 09da 14D8     		bhi	.L308
+ 1451 09dc 0223     		mov	r3, #2
+ 1452              	.L307:
+ 1453 09de 2B70     		strb	r3, [r5]
+ 1454 09e0 2B69     		ldr	r3, [r5, #16]
+ 1455 09e2 DB19     		add	r3, r3, r7
+ 1456 09e4 6B61     		str	r3, [r5, #20]
+ 1457              	.L310:
+ 1458 09e6 AB88     		ldrh	r3, [r5, #4]
+ 1459 09e8 2A69     		ldr	r2, [r5, #16]
+ 1460 09ea 1B09     		lsr	r3, r3, #4
+ 1461 09ec 9B18     		add	r3, r3, r2
+ 1462 09ee FB18     		add	r3, r7, r3
+ 1463 09f0 AB61     		str	r3, [r5, #24]
+ 1464 09f2 0023     		mov	r3, #0
+ 1465 09f4 AB70     		strb	r3, [r5, #2]
+ 1466 09f6 0F4B     		ldr	r3, .L313
+ 1467 09f8 1D60     		str	r5, [r3]
+ 1468              	.L312:
+ 1469 09fa 0020     		mov	r0, #0
+ 1470 09fc 15E0     		b	.L286
+ 1471              	.L292:
+ 1472 09fe 0120     		mov	r0, #1
+ 1473 0a00 13E0     		b	.L286
+ 1474              	.L294:
+ 1475 0a02 0720     		mov	r0, #7
+ 1476 0a04 11E0     		b	.L286
+ 1477              	.L308:
+ 1478 0a06 0323     		mov	r3, #3
+ 1479 0a08 2B70     		strb	r3, [r5]
+ 1480 0a0a 6B46     		mov	r3, sp
+ 1481 0a0c 0133     		add	r3, r3, #1
+ 1482 0a0e D97F     		ldrb	r1, [r3, #31]
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 27
+
+
+ 1483 0a10 0233     		add	r3, r3, #2
+ 1484 0a12 DA7F     		ldrb	r2, [r3, #31]
+ 1485 0a14 013B     		sub	r3, r3, #1
+ 1486 0a16 DB7F     		ldrb	r3, [r3, #31]
+ 1487 0a18 1206     		lsl	r2, r2, #24
+ 1488 0a1a 1B04     		lsl	r3, r3, #16
+ 1489 0a1c 1A43     		orr	r2, r2, r3
+ 1490 0a1e E37F     		ldrb	r3, [r4, #31]
+ 1491 0a20 0902     		lsl	r1, r1, #8
+ 1492 0a22 1A43     		orr	r2, r2, r3
+ 1493 0a24 1143     		orr	r1, r1, r2
+ 1494 0a26 6961     		str	r1, [r5, #20]
+ 1495 0a28 DDE7     		b	.L310
+ 1496              	.L286:
+ 1497 0a2a 09B0     		add	sp, sp, #36
+ 1498              		@ sp needed for prologue
+ 1499 0a2c F0BC     		pop	{r4, r5, r6, r7}
+ 1500 0a2e 02BC     		pop	{r1}
+ 1501 0a30 0847     		bx	r1
+ 1502              	.L314:
+ 1503 0a32 0000     		.align	2
+ 1504              	.L313:
+ 1505 0a34 00000000 		.word	FatFs
+ 1506 0a38 F60F0000 		.word	4086
+ 1507 0a3c F6FF0000 		.word	65526
+ 1508              		.size	pf_mount, .-pf_mount
+ 1509              		.bss
+ 1510              		.align	2
+ 1511              	FatFs:
+ 1512 0000 00000000 		.space	4
+ 1513              		.comm	dr,4,4
+ 1514              		.comm	clst,4,4
+ 1515              		.comm	sect,4,4
+ 1516              		.comm	remain,4,4
+ 1517              		.comm	rbuff,4,4
+ 1518              		.comm	rcnt,2,2
+ 1519              		.comm	fs,4,4
+ 1520              		.ident	"GCC: (GNU) 4.1.1"
+ARM GAS  /cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s 			page 28
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 pff.c
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1      .text:00000000 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:8      .text:00000000 clust2sect
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:31     .text:00000020 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1511   .bss:00000000 FatFs
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:34     .text:00000024 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:37     .text:00000024 dir_rewind
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:85     .text:00000070 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:88     .text:00000074 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:91     .text:00000074 check_fs
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:168    .text:00000100 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:172    .text:00000108 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:175    .text:00000108 get_fat
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:300    .text:000001f0 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:311    .text:00000200 pf_lseek
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:308    .text:00000200 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:411    .text:000002b4 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:420    .text:000002bc pf_read
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:417    .text:000002bc $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:572    .text:000003d0 $d
+                            *COM*:00000004 rbuff
+                            *COM*:00000004 fs
+                            *COM*:00000004 remain
+                            *COM*:00000004 clst
+                            *COM*:00000004 sect
+                            *COM*:00000002 rcnt
+                            *COM*:00000004 dr
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:583    .text:000003f4 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:586    .text:000003f4 dir_next
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:644    .text:00000458 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:651    .text:0000045c pf_readdir
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:648    .text:0000045c $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:813    .text:0000057c $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:816    .text:00000580 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:819    .text:00000580 follow_path
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1003   .text:000006c0 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1010   .text:000006c4 pf_opendir
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1007   .text:000006c4 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1062   .text:0000071c $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1069   .text:00000720 pf_open
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1066   .text:00000720 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1133   .text:00000794 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1140   .text:00000798 pf_write
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1137   .text:00000798 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1298   .text:000008b8 $d
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1307   .text:000008c4 pf_mount
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1304   .text:000008c4 $t
+/cygdrive/c/Users/embedded/AppData/Local/Temp/ccuQhkfg.s:1505   .text:00000a34 $d
+
+UNDEFINED SYMBOLS
+disk_readp
+__udivsi3
+__umodsi3
+disk_writep
+disk_initialize
