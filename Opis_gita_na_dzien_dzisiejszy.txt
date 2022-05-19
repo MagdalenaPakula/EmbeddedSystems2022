@@ -1,0 +1,7 @@
+FINAL - w nim znajduje sie juz dzialajacy i testowy - editujemy oba 
+	najpierw testowy, potem ten wlodarczyk + wrzucamy na GITA!
+Music Working - u get it
+Other new files - nwm czy to sprawdzalismy ale mozliwe ze w embedded plan jest czy dziala
+Other old files - wszystkie p;iki sprawdzone i opisane w embedded plan
+Working - to jest ten wlodarczyk
+half working - opisany w embedded plan
