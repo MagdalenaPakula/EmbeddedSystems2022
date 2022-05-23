@@ -6,7 +6,7 @@
  * Includes
  *****************************************************************************/
 
-#include "../pre_emptive_os/api/general.h"
+#include "general.h"
 #include "i2c.h"
 #include <lpc2xxx.h>
 

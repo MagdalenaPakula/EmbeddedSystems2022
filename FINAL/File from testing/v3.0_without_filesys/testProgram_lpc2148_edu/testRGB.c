@@ -6,8 +6,8 @@
  *****************************************************************************/
 
 
-#include "../pre_emptive_os/api/osapi.h"
-#include "../pre_emptive_os/api/general.h"
+#include "osapi.h"
+#include "general.h"
 #include <printf_P.h>
 #include <lpc2xxx.h>
 
@@ -42,9 +42,9 @@ testRGB(void)
   PWM_PR  = 0x00;    // Prescale Register
   PWM_MCR = 0x02;    // Match Control Register
   PWM_MR0 = 0x1000;    // TOTAL PERIODTID   T
-  PWM_MR2 = 0x0000;    // HÖG SIGNAL        t
-  PWM_MR4 = 0x0000;    // HÖG SIGNAL        t
-  PWM_MR6 = 0x0000;    // HÖG SIGNAL        t
+  PWM_MR2 = 0x0000;    // Hï¿½G SIGNAL        t
+  PWM_MR4 = 0x0000;    // Hï¿½G SIGNAL        t
+  PWM_MR6 = 0x0000;    // Hï¿½G SIGNAL        t
   PWM_LER = 0x55;    // Latch Enable Register
   PWM_PCR = 0x5400;  // Prescale Counter Register PWMENA2, PWMENA4, PWMENA6
   PWM_TCR = 0x09;    // Counter Enable och PWM Enable
@@ -90,15 +90,15 @@ continueTest = FALSE;
     switch(led)
     {
     	case 0:
-      PWM_MR2 = counter;    // HÖG SIGNAL
+      PWM_MR2 = counter;    // Hï¿½G SIGNAL
       PWM_LER = 0x04;    // Latch Enable Register
     	break;
     	case 1:
-      PWM_MR4 = counter;    // HÖG SIGNAL
+      PWM_MR4 = counter;    // Hï¿½G SIGNAL
       PWM_LER = 0x10;    // Latch Enable Register
     	break;
     	case 2:
-      PWM_MR6 = counter;    // HÖG SIGNAL
+      PWM_MR6 = counter;    // Hï¿½G SIGNAL
       PWM_LER = 0x40;    // Latch Enable Register
     	break;
     	default:

@@ -6,8 +6,8 @@
  *****************************************************************************/
 
 
-#include "../pre_emptive_os/api/osapi.h"
-#include "../pre_emptive_os/api/general.h"
+#include "osapi.h"
+#include "general.h"
 #include <printf_P.h>
 #include <lpc2xxx.h>
 #include <consol.h>

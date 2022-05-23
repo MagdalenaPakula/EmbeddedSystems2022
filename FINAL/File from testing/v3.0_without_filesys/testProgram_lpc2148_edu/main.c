@@ -9,15 +9,13 @@
  *****************************************************************************/
 
 
-#include "../pre_emptive_os/api/osapi.h"
-#include "../pre_emptive_os/api/general.h"
+#include "osapi.h"
+#include "general.h"
 #include <printf_P.h>
 #include <ea_init.h>
 #include <lpc2xxx.h>
 #include <consol.h>
 
-#include "usb/lpc_usb.h"
-#include "usb/lpc_hid.h"
 
 #define PROC1_STACK_SIZE 2048
 #define PROC2_STACK_SIZE 2048

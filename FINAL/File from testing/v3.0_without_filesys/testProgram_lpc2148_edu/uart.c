@@ -14,7 +14,7 @@
 /******************************************************************************
  * Includes
  *****************************************************************************/
-#include "../pre_emptive_os/api/general.h"
+#include "general.h"
 #include <lpc2xxx.h>
 #include "uart.h"
 #include "irq/irqUart.h"
