@@ -148,7 +148,7 @@ testLcd(void)
     //cursor home
     writeLCD(0, 0x02);
 osSleep(1);
-
+    //was changed on lab computer
     writeLCD(1, 'E');
     delay37us();
     writeLCD(1, 'm');

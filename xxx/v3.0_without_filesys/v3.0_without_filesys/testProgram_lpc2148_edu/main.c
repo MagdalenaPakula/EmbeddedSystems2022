@@ -52,12 +52,10 @@ void testMotor(void);
 void testRGB(void);
 void testI2C(void);
 //void testMMC(void);
-void testAdc(void);
 tU8  testXBee(void);
 
 tU8 xbeePresent;
 volatile tU32 msClock = 0;
-extern char startupSound[];
 
 
 /*****************************************************************************
@@ -115,23 +113,6 @@ proc1(void* arg)
     PINSEL1 |=  0x00080000;
 
     cnt = 0;
-    while(cnt++ < 0xF890)
-    {
-      tS32 val;
-      
-      val = startupSound[cnt] - 128;
-      val = val * 2;
-      if (val > 127) val = 127;
-      else if (val < -127) val = -127;
-
-      DACR = ((val+128) << 8) |  //actual value to output
-             (1 << 16);         //BIAS = 1, 2.5uS settling time
-
-      //delay 125 us = 850 for 8kHz, 600 for 11 kHz
-      for(i=0; i<850; i++)
-        asm volatile (" nop");
-    }
-
   }
 
 	for(;;)
@@ -147,19 +128,7 @@ proc1(void* arg)
     printf("*                                                     *\n");
     printf("*******************************************************\n");
 
-    //
-    //Start USB
-    //
-    printf("\n\nStarting USB Mouse test...\n");
-    printf("Use the joystick switch to move the cursor on the PC screen\n");
-    printf("(functions when the ADC test is visible)\n");
-    if (USB_Init(0,HID_CallBack,USB_NotFast))
-    {
-      printf("\nERROR initializing USB!\n");
-      for(;;)
-        osSleep(1);
-    }
-    
+
     //Initialize HID
     HID_Init();
 
@@ -304,20 +273,6 @@ proc4(void* arg)
 	}
 }
 
-/*****************************************************************************
- *
- * Description:
- *    A process entry function 
- *
- * Params:
- *    [in] arg - This parameter is not used in this application. 
- *
- ****************************************************************************/
-static void
-proc5(void* arg)
-{
-	testAdc();
-}
 
 /*****************************************************************************
  *
