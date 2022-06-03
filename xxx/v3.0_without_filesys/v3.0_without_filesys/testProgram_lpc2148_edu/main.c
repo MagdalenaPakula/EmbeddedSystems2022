@@ -1,23 +1,17 @@
-/******************************************************************************
- *
- * Copyright:
- *    (C) 2000 - 2007 Embedded Artists AB
- *
- * Description:
- *    Main program for LPC2148 Education Board test program
- *
- *****************************************************************************/
-
-
 #include "../pre_emptive_os/api/osapi.h"
 #include "../pre_emptive_os/api/general.h"
 #include <printf_P.h>
 #include <ea_init.h>
 #include <lpc2xxx.h>
-#include <consol.h>
-
-#include "usb/lpc_usb.h"
-#include "usb/lpc_hid.h"
+#include "testI2C.c"
+#include "testLcd.c"
+#include "testLedMatrix.c"
+#include "testMotor.c"
+#include "uart.c"
+#include "sd.h"
+#include "spi.h"
+#include "playerFunctions.c"
+#include "timer.h"
 
 #define PROC1_STACK_SIZE 2048
 #define PROC2_STACK_SIZE 2048
